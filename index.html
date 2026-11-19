@@ -1,0 +1,34 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#162f42"><title>海岛奇兵 · 精英队长抽选规划器</title><link rel="stylesheet" href="style.css"><link rel="stylesheet" href="community.css"></head><body><header><nav><b><span class="mark">★</span> 海岛作战室</b><div class="nav-actions"><small>作者：家恩宝贝</small><small>助手：GPT-6.2 Astra（Ultra）</small><a href="contact.html">联系我</a></div></nav></header><main>
+<section class="intro"><div><small>BOOM BEACH / 精英招募</small><h1>精英队长抽选规划器</h1><p>填入现有核心秘钥与游戏习惯，自动推荐每一期到第几命收手。</p></div></section>
+<form id="planner"><div id="cards"></div>
+<section class="panel" id="plan"><h2>我的核心秘钥预算</h2><div class="fields"><label>现有核心秘钥<span class="resource"><img alt="" src="assets/key.png"><input id="tickets" type="number" min="0" max="999999" step="1" value="451" required></span></label><label>现有秘钥碎片（200 换 1 抽）<span class="resource"><img alt="" src="assets/shard.png"><input id="pieces" type="number" min="0" max="99999999" step="1" value="3400" required><span class="piece-buttons"><button type="button" data-change="100" aria-label="增加100个碎片">▴</button><button type="button" data-change="-100" aria-label="减少100个碎片">▾</button></span></span></label></div>
+<div class="fields"><label>距离中尉保底还需招募次数<input id="remaining" type="number" min="1" max="80" step="1" value="73" required><span class="note">照填游戏中显示的数字</span></label><label>下一位中尉<select id="up"><option value="0">50% 为当期队长（小保底）</option><option value="1">100%为当期队长（大保底）</option></select></label></div>
+<h3>我的游戏习惯</h3><label><select id="habit"><option value="69">零氪党 · 每月新增约69抽</option><option value="228" selected>微氪党 · 每月新增约228抽</option><option value="custom">自定义每月新增数量</option></select></label><div class="actions"><button type="button" id="customButton">自定义每月新增数量</button></div><label id="customWrap" hidden>每月新增核心秘钥<input id="customIncome" type="number" min="0" max="99999" step="1" value="228" required disabled></label><p class="note">零氪指完全不对游戏充钱。微氪指所有战令、周卡都购买，但不充值 648。</p>
+<details><summary>展开每月抽数计算明细</summary><table><thead><tr><th>来源</th><th>零氪</th><th>微氪</th></tr></thead><tbody><tr><td>每日任务</td><td>15</td><td>15</td></tr><tr><td>邪恶商店</td><td>10</td><td>10</td></tr><tr><td>电路商店</td><td>5</td><td>5</td></tr><tr><td>海岛战令</td><td>5</td><td>20</td></tr><tr><td>周卡</td><td>0</td><td>100</td></tr><tr><td>队长部署</td><td>16</td><td>40</td></tr><tr><td>闪电战</td><td>8</td><td>18</td></tr><tr><td>声呐活动</td><td>10</td><td>20</td></tr><tr><th>合计</th><th>69 抽</th><th>228 抽</th></tr></tbody></table><p class="note">按每期一个月、完成上述任务和兑换计算，包含声呐活动。电路商店每月需 500 电路板。</p></details>
+<div class="actions"><button type="submit" class="primary">查看停抽建议</button><span id="state" role="status"></span></div></section></form>
+<section class="panel" id="results" aria-live="polite"></section>
+<details class="panel"><summary>推荐依据</summary><p>按科菲、安娜、林尼亚的预计返场顺序计算三期预算。预算很紧时优先争取林尼亚本体。按科菲、安娜、林尼亚的顺序，基础目标为0／0／1，之后争取0／1／2。再用余券优先争取林尼亚4命增伤和5命复活。科菲通常在本体或2命收手，安娜通常在1命收手。预算宽裕时再考虑安娜2命和两人的3命。通用方案达到3／3／5后建议存券，已有的更高命座会保留。</p><p>系统根据中尉的招募概率模拟5,000次，计算时继承当前中尉招募进度和大小保底状态。通常选择预计达成概率至少90%的方案。预算不足时，会显示集中存券争取林尼亚本体的机会。首次获得队长为0命，每重复获得一次提升1命。修改设置后会立即重新计算。</p><a href="https://support.supercell.com/boom-beach/zh/articles/drop-chances.html">Supercell 招募概率说明</a></details><section class="community-wrap" id="guestbook" aria-labelledby="guestbook-title">
+  <div class="card community-card">
+    <div class="community-intro">
+      <h2 id="guestbook-title" data-word="guestbook">留言板</h2>
+      <p data-word="publicHint">发表后，所有访问者都能看到你的昵称和留言。</p>
+    </div>
+    <div class="community-columns">
+      <div class="message-feed">
+        <div class="feed-tools"><h3 data-word="recent">最新留言</h3>
+          <button type="button" id="refresh-messages" data-word="refresh">刷新</button></div>
+        <p id="feed-state" class="community-note" role="status"></p>
+        <ol id="public-messages"></ol>
+        <button type="button" id="older-messages" data-word="older" hidden>查看更多</button>
+      </div>
+      <form id="guest-form" class="community-form">
+        <label for="guest-name" data-word="nickname">昵称</label>
+        <input id="guest-name" name="nickname" autocomplete="nickname" required>
+        <label for="guest-text" data-word="message">留言</label>
+        <textarea id="guest-text" name="message" rows="3" required></textarea>
+        <div class="form-actions"><button id="publish-message" type="submit" data-word="publish">发表留言</button></div>
+        <p id="post-state" class="community-note" role="status"></p>
+      </form>
+    </div>
+  </div>
+</section></main><script src="engine.js"></script><script src="app.js"></script><script src="settings.js"></script><script src="community.js"></script></body></html>

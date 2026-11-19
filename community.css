@@ -1,0 +1,42 @@
+.help-tools{flex-wrap:wrap}
+@media(min-width:761px){main{align-items:stretch}}
+.help-tools .contact-link,.contact-back{display:inline-flex;align-items:center;justify-content:center;border-radius:8px;border:1px solid #67978a;background:#194e43;color:#fff;text-decoration:none;font:650 13px/1.5 inherit;padding:5px 11px;min-height:34px}
+.help-tools .contact-link{font-size:13px;font-weight:650}
+.help-tools .contact-link:hover,.contact-back:hover{background:#276355}
+.community-wrap{max-width:1160px;margin:0 auto;padding:0 clamp(12px,3vw,32px) 30px}
+.community-card{padding:clamp(16px,2vw,24px)}
+.community-intro{margin-bottom:18px}
+.community-intro h2{font-size:20px;line-height:1.3}
+.community-intro p,.community-note{color:#476762;font-size:13px}
+.community-intro p{margin:4px 0 0}
+.community-columns{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:clamp(18px,4vw,50px)}
+.feed-tools,.form-actions{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.feed-tools h3{font-size:15px;margin:0}
+.feed-tools button,#older-messages{font-size:13px;padding:4px 10px}
+#public-messages{list-style:none;padding:0;margin:8px 0}
+#public-messages li{border-top:1px solid #d8e4de;padding:10px 0}
+.message-meta{display:flex;align-items:baseline;flex-wrap:wrap;gap:6px 12px;font-size:14px;overflow-wrap:anywhere}
+.message-meta time{font-size:12px;color:#57716a}
+#public-messages p{font-size:14px;white-space:pre-wrap;overflow-wrap:anywhere;margin:3px 0 0}
+.community-form{display:grid;align-content:start;gap:6px;min-width:0}
+.community-form label{font-size:14px;font-weight:650}
+.community-form :is(input,textarea){display:block;width:100%;min-width:0;box-sizing:border-box;border:1px solid #a6c3b7;border-radius:8px;background:white;color:#143b35;font:inherit;line-height:1.5;padding:8px 10px;margin:0 0 4px}
+.community-form textarea{resize:vertical;min-height:72px}
+.community-form :is(input,textarea):focus-visible,.contact-link:focus-visible{outline:3px solid #167e78;outline-offset:2px}
+.community-form button[type=submit]{background:#126351;color:white;border-color:#126351;padding:8px 16px}
+.community-form button[type=submit]:hover:enabled{background:#0c5143}
+.community-note{margin:4px 0}
+.community-note:empty{display:none}
+.community-note[data-error="true"]{color:#992e28}
+.contact-body{margin:0;color:#143b35;background:#eff5f0;font:15px/1.5 "PingFang SC","Microsoft YaHei",system-ui,sans-serif}
+.contact-body *{box-sizing:border-box}
+.contact-mast{background:#103e36;color:#fff}
+.contact-bar{max-width:760px;margin:auto;padding:14px clamp(14px,3vw,28px);display:flex;align-items:center;justify-content:space-between;gap:10px}
+.contact-bar select{font:inherit;font-size:14px;padding:6px 9px;color:#fff;background:#194e43;border:1px solid #67978a;border-radius:8px}
+.contact-main{max-width:760px;margin:24px auto;padding:0 clamp(14px,3vw,28px)}
+.contact-card{background:#fff;border:1px solid #c9dbd4;border-radius:15px;padding:clamp(18px,4vw,32px)}
+.contact-card h1{font-size:clamp(23px,4vw,30px);margin:0 0 5px;line-height:1.3}
+.contact-card .community-intro{margin-bottom:20px}
+.contact-card button{font:650 15px/1.5 system-ui,sans-serif;cursor:pointer;border:1px solid;border-radius:8px}
+.contact-card button:disabled{opacity:.48;cursor:default}
+@media(max-width:680px){.community-columns{grid-template-columns:minmax(0,1fr)}.community-form{border-top:1px solid #d8e4de;padding-top:14px}.contact-card .community-form{border:0;padding-top:0}}

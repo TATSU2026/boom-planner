@@ -1,0 +1,26 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>海岛作战室 · 留言板</title><link rel="stylesheet" href="community.css"><link rel="stylesheet" href="style.css"><script defer src="settings.js"></script><script defer src="community.js"></script></head><body><header><nav><b>海岛作战室</b><a href="index.html">返回规划器</a></nav></header><main><section class="community-wrap" id="guestbook" aria-labelledby="guestbook-title">
+  <div class="card community-card">
+    <div class="community-intro">
+      <h2 id="guestbook-title" data-word="guestbook">留言板</h2>
+      <p data-word="publicHint">发表后，所有访问者都能看到你的昵称和留言。</p>
+    </div>
+    <div class="community-columns">
+      <div class="message-feed">
+        <div class="feed-tools"><h3 data-word="recent">最新留言</h3>
+          <button type="button" id="refresh-messages" data-word="refresh">刷新</button></div>
+        <p id="feed-state" class="community-note" role="status"></p>
+        <ol id="public-messages"></ol>
+        <button type="button" id="older-messages" data-word="older" hidden>查看更多</button>
+      </div>
+      <form id="guest-form" class="community-form">
+        <label for="guest-name" data-word="nickname">昵称</label>
+        <input id="guest-name" name="nickname" autocomplete="nickname" required>
+        <label for="guest-text" data-word="message">留言</label>
+        <textarea id="guest-text" name="message" rows="3" required></textarea>
+        <div class="form-actions"><button id="publish-message" type="submit" data-word="publish">发表留言</button></div>
+        <p id="post-state" class="community-note" role="status"></p>
+      </form>
+    </div>
+  </div>
+</section>
+</main></body></html>
