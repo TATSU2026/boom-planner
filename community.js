@@ -10,9 +10,9 @@
     message:["留言","留言","Message","メッセージ"],
     publish:["发表留言","發表留言","Post message","投稿する"],
     contact:["联系我","聯絡我","Contact","お問い合わせ"],
-    contactHeading:["联系 TATSU","聯絡 TATSU","Contact TATSU","TATSU に連絡"],
+    contactHeading:["联系 家恩宝贝","聯絡 家恩宝贝","Contact 家恩宝贝","家恩宝贝 に連絡"],
     back:["← 返回规划器","← 返回規劃器","← Back to planner","← プランナーに戻る"],
-    privateHint:["建议会私下发给 TATSU。如果希望收到回复，请留下联系方式。","建議會私下寄給 TATSU。如果希望收到回覆，請留下聯絡方式。","Your feedback goes privately to TATSU. Leave contact details if you would like a reply.","ご意見は TATSU に直接届きます。返信をご希望の場合は連絡先をご記入ください。"],
+    privateHint:["建议会私下发给 家恩宝贝。如果希望收到回复，请留下联系方式。","建議會私下寄給 家恩宝贝。如果希望收到回覆，請留下聯絡方式。","Your feedback goes privately to 家恩宝贝. Leave contact details if you would like a reply.","ご意見は 家恩宝贝 に直接届きます。返信をご希望の場合は連絡先をご記入ください。"],
     suggestion:["建议内容","建議內容","Your feedback","ご意見・ご要望"],
     sender:["你的称呼（选填）","你的稱呼（選填）","Your name (optional)","お名前（任意）"],
     reply:["联系方式（选填）","聯絡方式（選填）","Contact details (optional)","連絡先（任意）"],
@@ -162,6 +162,8 @@
       event.preventDefault();
       if (button.disabled) return;
       const payload = new FormData(form);
+      payload.set("source", "精英队长抽选规划器 · 家恩宝贝");
+      payload.set("page", location.href);
       const message = String(payload.get("message")).trim();
       if (!message) {notice("contact-state","required",true);return;}
       payload.set("message",message);
