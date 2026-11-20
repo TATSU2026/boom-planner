@@ -1,8 +1,26 @@
-<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#162f42"><title>海岛奇兵 · 精英队长抽选规划器</title><link rel="stylesheet" href="style.css"><link rel="stylesheet" href="community.css"></head><body><header><nav><b><span class="mark">★</span> 海岛作战室</b><div class="nav-actions"><small>作者：家恩宝贝</small><small>助手：GPT-6.2 Astra（Ultra）</small><a href="contact.html">联系我</a></div></nav></header><main>
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#162f42"><title>海岛奇兵 · 精英队长抽选规划器</title><link rel="stylesheet" href="style.css"><link rel="stylesheet" href="community.css"><style>
+#cards select{appearance:none;-webkit-appearance:none;border:2px solid #167889;background-color:#e9f6f8;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='12'%3E%3Cpath d='m3 3 6 6 6-6' fill='none' stroke='%23156778' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:40px;min-height:48px;box-shadow:0 2px 5px #123c4c18;cursor:pointer}
+#cards select:focus-visible{outline:3px solid #e7bd53;outline-offset:2px}
+#plan .fields{grid-template-columns:repeat(2,minmax(0,1fr));align-items:start}
+#plan .fields>label{min-width:0;display:flex;flex-direction:column;align-items:stretch}
+#plan .fields input,#plan .fields select{box-sizing:border-box;min-height:44px;min-width:0}
+#plan .resource{margin-top:4px}
+#plan .resource input{margin-top:0}
+.other-tools{position:relative;color:white;margin:0;font-size:14px}
+.other-tools summary{cursor:pointer;border:1px solid #9bb4bd;border-radius:7px;padding:7px 10px;white-space:nowrap}
+.other-tools>a{position:absolute;right:0;top:calc(100% + 6px);z-index:20;display:block;background:#163d50;color:white;padding:12px 16px;border-radius:8px;white-space:nowrap;box-shadow:0 3px 10px #0003;text-decoration:none}
+@media(max-width:760px){
+.nav-actions{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:6px 10px}
+.nav-actions a{grid-column:auto;grid-row:auto}
+#plan .fields>label{font-size:14px}
+#plan .fields{gap:10px}
+#plan .fields input,#plan .fields select{font-size:16px}
+}
+</style></head><body><header><nav><b><span class="mark">★</span> 海岛作战室</b><div class="nav-actions"><small>作者：家恩宝贝</small><small>助理：GPT-6.2 Astra</small><a href="contact.html">联系我</a><details class="other-tools"><summary>其它工具</summary><a href="https://tatsu2026.github.io/boom-beach-sonar/">声呐小助手</a></details></div></nav></header><main>
 <section class="intro"><div><small>BOOM BEACH / 精英招募</small><h1>精英队长抽选规划器</h1><p>填入现有核心秘钥与游戏习惯，自动推荐每一期到第几命收手。</p></div></section>
 <form id="planner"><div id="cards"></div>
-<section class="panel" id="plan"><h2>我的核心秘钥预算</h2><div class="fields"><label>现有核心秘钥<span class="resource"><img alt="" src="assets/key.png"><input id="tickets" type="number" min="0" max="999999" step="1" value="451" required></span></label><label>现有秘钥碎片（200 换 1 抽）<span class="resource"><img alt="" src="assets/shard.png"><input id="pieces" type="number" min="0" max="99999999" step="1" value="3400" required><span class="piece-buttons"><button type="button" data-change="100" aria-label="增加100个碎片">▴</button><button type="button" data-change="-100" aria-label="减少100个碎片">▾</button></span></span></label></div>
-<div class="fields"><label>距离中尉保底还需招募次数<input id="remaining" type="number" min="1" max="80" step="1" value="73" required><span class="note">照填游戏中显示的数字</span></label><label>下一位中尉<select id="up"><option value="0">50% 为当期队长（小保底）</option><option value="1">100%为当期队长（大保底）</option></select></label></div>
+<section class="panel" id="plan"><h2>我的核心秘钥预算</h2><div class="fields"><label>现有核心秘钥<span class="resource"><img alt="" src="assets/key.png"><input id="tickets" type="number" min="0" max="999999" step="1" value="451" required></span></label><label>现有秘钥碎片<span class="resource"><img alt="" src="assets/shard.png"><input id="pieces" type="number" min="0" max="99999999" step="1" value="3400" required><span class="piece-buttons"><button type="button" data-change="100" aria-label="增加100个碎片">▴</button><button type="button" data-change="-100" aria-label="减少100个碎片">▾</button></span></span></label></div>
+<div class="fields"><label>距离保底次数<input id="remaining" type="number" min="1" max="80" step="1" value="73" required><span class="note">照填游戏中显示的数字</span></label><label>保底类型<select id="up"><option value="0">50% 为当期队长</option><option value="1">100% 为当期队长</option></select></label></div>
 <h3>我的游戏习惯</h3><label><select id="habit"><option value="69">零氪党 · 每月新增约69抽</option><option value="228" selected>微氪党 · 每月新增约228抽</option><option value="custom">自定义每月新增数量</option></select></label><div class="actions"><button type="button" id="customButton">自定义每月新增数量</button></div><label id="customWrap" hidden>每月新增核心秘钥<input id="customIncome" type="number" min="0" max="99999" step="1" value="228" required disabled></label><p class="note">零氪指完全不对游戏充钱。微氪指所有战令、周卡都购买，但不充值 648。</p>
 <details><summary>展开每月抽数计算明细</summary><table><thead><tr><th>来源</th><th>零氪</th><th>微氪</th></tr></thead><tbody><tr><td>每日任务</td><td>15</td><td>15</td></tr><tr><td>邪恶商店</td><td>10</td><td>10</td></tr><tr><td>电路商店</td><td>5</td><td>5</td></tr><tr><td>海岛战令</td><td>5</td><td>20</td></tr><tr><td>周卡</td><td>0</td><td>100</td></tr><tr><td>队长部署</td><td>16</td><td>40</td></tr><tr><td>闪电战</td><td>8</td><td>18</td></tr><tr><td>声呐活动</td><td>10</td><td>20</td></tr><tr><th>合计</th><th>69 抽</th><th>228 抽</th></tr></tbody></table><p class="note">按每期一个月、完成上述任务和兑换计算，包含声呐活动。电路商店每月需 500 电路板。</p></details>
 <div class="actions"><button type="submit" class="primary">查看停抽建议</button><span id="state" role="status"></span></div></section></form>
