@@ -77,7 +77,37 @@ const Planner = (() => {
     }
     return {goal,...assess(owned,goal,budget,paths)};
   }
-  return {samples,limits,assess,recommend};
+  function planTargets(owned, targets, budget, paths) {
+    if (targets.every(target => target === null)) return recommend(owned,budget,paths);
+    const fixed = targets.map((target,i) => target === null ? owned[i] : Math.max(owned[i],target));
+    const stops = [[0,2,3],[0,1,2,3],[0,1,2,4,5]];
+    const choices = targets.map((target,i) => target === null
+      ? [owned[i], ...stops[i].filter(rank => rank > owned[i])]
+      : [fixed[i]]);
+    const milestones = [[2,0],[1,0],[0,0],[2,1],[1,1],[2,2],[2,5],[2,4],[1,2],[0,2],[0,3],[1,3]];
+    let goal = fixed.slice(), bestScore = -1;
+    for (const k of choices[0]) {
+      for (const a of choices[1]) {
+        for (const l of choices[2]) {
+          const candidate = [k,a,l];
+          const score = milestones.reduce((total,[i,rank]) => 2*total + Number(candidate[i]>=rank),0);
+          if (score <= bestScore) continue;
+          const result = assess(owned,candidate,budget,paths);
+          if (result.chance >= .9) {
+            goal = candidate;
+            bestScore = score;
+          }
+        }
+      }
+    }
+    return {goal,...assess(owned,goal,budget,paths)};
+  }
+  function drawStats(paths, start, end) {
+    const draws = paths.map(path => path[end] - path[start]).sort((a,b) => a-b);
+    const sum = draws.reduce((total,n) => total+n, 0);
+    return {mean: Math.round(sum/draws.length), p90: draws[Math.ceil(.9*draws.length)-1]};
+  }
+  return {samples,limits,assess,recommend,planTargets,drawStats};
 })();
 if(typeof module!=='undefined')module.exports=Planner;
 
