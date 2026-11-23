@@ -16,3 +16,17 @@ main>.community-wrap{width:100%;max-width:none;padding:0;margin:20px 0}.resource
   .nav-actions small { margin: 0; letter-spacing: normal; }
   .nav-actions a { grid-column: 2; grid-row: 1 / 3; white-space: nowrap; }
 }
+
+fieldset#sources{min-inline-size:0}
+fieldset#sources legend{max-inline-size:100%;white-space:normal;overflow-wrap:anywhere}
+html[dir="rtl"] .resource input{direction:ltr;text-align:left}
+html[dir="rtl"] .income-amount input{direction:ltr}
+html[dir="rtl"] .caption,html[dir="rtl"] .draw-card{text-align:start}
+html:not([lang^="zh"]) #results .draw-card dl>div{gap:8px;align-items:baseline}
+html:not([lang^="zh"]) #results .draw-card dd{white-space:normal;overflow-wrap:anywhere}
+html:not([lang^="zh"]) #results .draw-card dt{overflow-wrap:anywhere}
+@media(max-width:640px){
+ html:not([lang^="zh"]) #plan .budget-fields{grid-template-columns:minmax(0,1fr)}
+ html:not([lang^="zh"]) .income-reference table{table-layout:fixed;width:100%;overflow-wrap:anywhere}
+ html:not([lang^="zh"]) .nav-actions{min-width:0;flex-wrap:wrap}
+}

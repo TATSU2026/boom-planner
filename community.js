@@ -32,13 +32,9 @@
     required:["请填写建议内容。","請填寫建議內容。","Please enter your feedback.","ご意見をご記入ください。"],
     forbidden:["当前网址尚未获准发表留言，请从正式站点打开。","目前網址尚未獲准發表留言，請從正式網站開啟。","Posting is unavailable from this address. Open the published site to post.","このURLからは投稿できません。公開サイトからご利用ください。"]
   };
-  const languages = ["zh","zh-Hant","en","ja"];
-  const preference = "boom-beach-sonar-f2-language";
-  const normalize = lang => lang === "zh-CN" ? "zh" : languages.includes(lang) ? lang : "zh";
   const byId = id => document.getElementById(id);
   const config = window.SONAR_SERVICES || {};
-  let current = normalize(document.documentElement.lang);
-  const word = key => words[key][languages.indexOf(current)];
+  const word = key => words[key][0];
   const notices = new Map();
   function notice(id, key, error = false) {
     notices.set(id,key);
@@ -53,7 +49,7 @@
       const date = new Date(node.dateTime);
       node.textContent = new Intl.DateTimeFormat(document.documentElement.lang,{dateStyle:"medium",timeStyle:"short"}).format(date);
     });
-    if (byId("contact-link")) byId("contact-link").href = "./contact.html?lang="+current;
+    
   }
   function getGuestbookUrl() {
     if (!config.guestbookUrl) return null;
@@ -138,23 +134,6 @@
     else {lock(false);notice("feed-state","offlineBoard");}
   }
   function startContact() {
-    const select = byId("contact-language");
-    let saved = "zh"; try {saved = localStorage.getItem(preference);} catch {}
-    function choose(value) {
-      current = normalize(value);
-      document.documentElement.lang = current === "zh" ? "zh-CN" : current;
-      select.value = current;
-      select.setAttribute("aria-label",word("language"));
-      document.title = word("contactHeading");
-      byId("back-board").href = "./index.html?lang="+current;
-      translate();
-    }
-    choose(new URLSearchParams(location.search).get("lang") || saved);
-    select.onchange = () => {
-      choose(select.value);
-      try {localStorage.setItem(preference,current);} catch {}
-      try {history.replaceState(null,"","?lang="+current);} catch {}
-    };
     const form = byId("contact-form"), button = byId("send-feedback");
     const id = String(config.formspreeId || "").trim();
     if (!/^[a-zA-Z0-9_-]{5,64}$/.test(id)) {button.disabled=true;notice("contact-state","offlineMail");}
@@ -177,21 +156,7 @@
       finally {button.disabled=false;}
     };
   }
-  if (byId("guest-form")) {
-    document.addEventListener("sonar-language",event => {current=normalize(event.detail);translate();});
-    const selection = new URLSearchParams(location.search).get("lang");
-    const select = byId("languageToggle");
-    if (languages.includes(selection) && select && selection !== current) {
-      select.value = selection;
-      select.dispatchEvent(new Event("change",{bubbles:true}));
-    }
-    if (selection) try {
-      const clean = new URL(location.href);
-      clean.searchParams.delete("lang");
-      history.replaceState(null,"",clean);
-    } catch {}
-    current = normalize(document.documentElement.lang);
-    translate(); startGuestbook();
-  } else if (byId("contact-form")) startContact();
+  document.addEventListener('planner-language',translate);
+  if (byId("guest-form")) {translate();startGuestbook();}
+  else if (byId("contact-form")) {translate();startContact();}
 })();
-

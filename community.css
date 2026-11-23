@@ -40,3 +40,16 @@
 .contact-card button{font:650 15px/1.5 system-ui,sans-serif;cursor:pointer;border:1px solid;border-radius:8px}
 .contact-card button:disabled{opacity:.48;cursor:default}
 @media(max-width:680px){.community-columns{grid-template-columns:minmax(0,1fr)}.community-form{border-top:1px solid #d8e4de;padding-top:14px}.contact-card .community-form{border:0;padding-top:0}}
+
+#planner-language{font:600 15px/1.3 system-ui,sans-serif;min-height:44px;width:auto;max-width:100%;padding:6px 10px;border-radius:8px;border:1px solid #9bb4bd;background:#183b4b;color:white}
+
+#planner-language[hidden]{display:none!important}
+.locale-menu{position:relative;margin:0;color:white}
+.locale-menu summary,.nav-actions>.locale-menu>summary{display:flex;align-items:center;gap:6px;box-sizing:border-box;height:44px;width:max-content;max-width:100%;padding:0 10px;border:1px solid #9bb4bd;border-radius:8px;cursor:pointer;font:600 14px system-ui;background:#183b4b;color:white;list-style:none}
+.locale-menu summary::-webkit-details-marker{display:none}
+.locale-menu summary::after{content:"▾"}
+.locale-menu img{width:22px;height:16px;object-fit:contain}
+.locale-menu section{position:absolute;z-index:100;inset-inline-end:0;top:100%;width:max-content;max-height:min(52vh,340px);overflow:auto;background:#183b4b;padding:4px;border-radius:8px}
+.locale-menu section button,.nav-actions .locale-menu section button{display:flex;align-items:center;gap:8px;width:100%;min-height:36px;border:0;padding:5px 9px;color:white;background:transparent;cursor:pointer;text-align:start}
+.locale-menu section button:is(:focus-visible,:hover,[aria-pressed=true]){background:#28566a}
+@media(max-width:600px){.nav-actions .locale-menu section{inset-inline-end:auto;inset-inline-start:0}}
