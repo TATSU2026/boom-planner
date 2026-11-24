@@ -77,7 +77,7 @@
     render(document.querySelector('title'));
     for (const link of document.querySelectorAll('a[href]')) {
       const target = new URL(link.href,location.href);
-      if (target.origin === location.origin && /\/(?:contact|guestbook|index)\.html$/.test(target.pathname)) {
+      if ((target.origin === "https://tatsu2026.github.io" && /^\/boom-beach-sonar(?:\/|$)/.test(target.pathname)) || target.origin === location.origin && /\/(?:contact|guestbook|index)\.html$/.test(target.pathname)) {
         target.searchParams.set('lang',current);
         link.href = target.href;
       }
