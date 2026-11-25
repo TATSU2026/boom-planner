@@ -95,6 +95,7 @@ function fillIncome(values){
  calculate();
 }
 $('fillFree').onclick=()=>fillIncome([15,10,5,5,0,16,8,10]);
+$('clearIncome').onclick=()=>fillIncome(Array(8).fill(''));
 $('fillPaid').onclick=()=>fillIncome([15,10,5,20,100,40,18,25]);
 document.querySelectorAll('.income-reference > summary').forEach(summary => {
  summary.addEventListener('click', event => {
