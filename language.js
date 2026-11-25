@@ -21,9 +21,16 @@
   const lookup = text => current === 'zh' ? text : packs[current][indices.get(text)];
   const talents = keys.filter(key => /^[一二三四五]命 · /.test(key));
   const number = value => new Intl.NumberFormat(current, {useGrouping:false}).format(Number(value));
+  const explanations={"de":["Nach der Belohnung am siebten Tag ist der nächste Kauf sofort möglich.","Um Seegebiet 18 reichen die Sonarmünzen für 2.000 Fragmente. Der bezahlte Richtwert liegt bei etwa 25 Versuchen.","Mit Premium-Pass etwa 40 Versuche, mit 350 Diamanten etwa 41, mit allen Fragmenten etwa 63."],"es":["Puedes renovar al cobrar el séptimo día.","Cerca de la zona 18, las monedas de sonar permiten conseguir 2.000 fragmentos. La estimación de pago es de unas 25 tiradas.","Unas 40 tiradas con el pase, 41 al añadir 350 diamantes y 63 al comprar todos los fragmentos."],"fr":["Le pass peut être renouvelé dès la récompense du septième jour.","Vers la zone 18, les pièces sonar permettent d’obtenir 2 000 fragments. Le forfait payant prévoit environ 25 tirages.","Environ 40 tirages avec le pass, 41 avec 350 diamants supplémentaires et 63 en achetant tous les fragments."],"it":["Puoi rinnovare appena ritiri il premio del settimo giorno.","Intorno alla zona 18 le monete sonar bastano per 2.000 frammenti. La stima a pagamento è di circa 25 estrazioni.","Circa 40 estrazioni con il pass, 41 aggiungendo 350 diamanti e 63 acquistando tutti i frammenti."],"ko":["7일째 보상을 받으면 바로 다시 구매할 수 있습니다.","18해역 부근에서 모은 소나 코인으로 조각 2,000개를 교환합니다. 유료 기준은 약 25회입니다.","패스 구매 시 약 40회, 다이아몬드 350개 추가 시 약 41회, 조각 전량 교환 시 약 63회입니다."],"nl":["Na de beloning op dag zeven kun je direct verlengen.","Rond zeegebied 18 leveren sonarmunten 2.000 fragmenten op. De betaalde schatting is ongeveer 25 trekkingen.","Met de pas ongeveer 40 trekkingen, met 350 extra diamanten 41 en met alle fragmenten 63."],"nb":["Du kan fornye straks du har hentet belønningen på dag sju.","Rundt havområde 18 gir sonarmyntene 2 000 fragmenter. Betalt anslag er omtrent 25 trekk.","Omtrent 40 trekk med passet, 41 med 350 ekstra diamanter og 63 med alle fragmentene."],"pt":["Pode renovar logo após receber a recompensa do sétimo dia.","Por volta da zona 18, as moedas de sonar rendem 2.000 fragmentos. A estimativa paga é de cerca de 25 sorteios.","Cerca de 40 sorteios com o passe, 41 com mais 350 diamantes e 63 ao comprar todos os fragmentos."],"ru":["После получения награды за седьмой день пропуск можно сразу купить снова.","Примерно у 18-го морского района монет сонара хватает на 2 000 фрагментов. Ориентир с покупками — около 25 попыток.","С пропуском около 40 попыток, с доплатой 350 алмазов — 41, при покупке всех фрагментов — 63."],"tr":["Yedinci günün ödülünü alınca hemen yeniden satın alabilirsiniz.","18. deniz bölgesi civarında sonar paralarıyla 2.000 parça alınabilir. Ücretli tahmin yaklaşık 25 çekiliştir.","Biletle yaklaşık 40, ek 350 elmasla 41, tüm parçalarla 63 çekiliş."],"ar":["يمكن تجديد البطاقة فور استلام مكافأة اليوم السابع.","قرب المنطقة البحرية 18 تكفي عملات السونار لشراء 2000 شظية. التقدير المدفوع نحو 25 سحبة.","نحو 40 سحبة مع التصريح، و41 بإضافة 350 ماسة، و63 عند شراء جميع الشظايا."],"id":["Setelah mengambil hadiah hari ketujuh, kamu bisa langsung membeli lagi.","Di sekitar wilayah laut 18, koin sonar cukup untuk 2.000 pecahan. Perkiraan berbayar sekitar 25 undian.","Sekitar 40 undian dengan pas, 41 dengan tambahan 350 berlian, dan 63 jika membeli semua pecahan."],"ms":["Selepas menuntut ganjaran hari ketujuh, pas boleh dibeli semula serta-merta.","Sekitar kawasan laut 18, syiling sonar mencukupi untuk 2,000 serpihan. Anggaran berbayar kira-kira 25 cabutan.","Kira-kira 40 cabutan dengan pas, 41 dengan tambahan 350 berlian dan 63 jika membeli semua serpihan."],"vi":["Có thể mua tiếp ngay khi nhận thưởng ngày thứ bảy.","Đến khoảng vùng biển 18, xu sonar đủ đổi 2.000 mảnh. Mức trả phí ước tính khoảng 25 lượt.","Khoảng 40 lượt với vé cao cấp, 41 lượt nếu dùng thêm 350 kim cương và 63 lượt khi mua hết mảnh."],"th":["ซื้อรอบใหม่ได้ทันทีหลังรับรางวัลวันที่เจ็ด","เมื่อถึงบริเวณน่านน้ำที่ 18 เหรียญโซนาร์จะพอแลกชิ้นส่วน 2,000 ชิ้น แบบเติมเงินประเมินไว้ประมาณ 25 ครั้ง","ซื้อพาสได้ประมาณ 40 ครั้ง ใช้เพชรเพิ่ม 350 เม็ดได้ประมาณ 41 ครั้ง และซื้อชิ้นส่วนทั้งหมดได้ประมาณ 63 ครั้ง"],"fi":["Voit uusia passin heti seitsemännen päivän palkinnon jälkeen.","Merialueen 18 tienoilla kaikuluotainkolikot riittävät 2 000 sirpaleeseen. Maksullinen arvio on noin 25 arvontaa.","Passilla noin 40 arvontaa, 350 lisätimantilla 41 ja kaikilla sirpaleilla 63."],"zh-Hant":["領完第七天獎勵，當天即可續購。","推進到第18海域附近，用聲納幣換取2,000個碎片。付費預設約25抽。","尊享戰令約40抽，另用350鑽石可達約41抽，換完商店碎片合計約63抽。"]};
+  function approx(){return ({zh:'约','zh-Hant':'約',ja:'約',ko:'약 ',en:'about ',de:'ca. ',fr:'env. ',es:'aprox. ',it:'circa ',nl:'ca. ',nb:'ca. ',pt:'aprox. ',ru:'около ',tr:'yaklaşık ',ar:'حوالي ',id:'sekitar ',ms:'kira-kira ',vi:'khoảng ',th:'ประมาณ ',fi:'noin '})[current];}
+  const baseWords = {"en":"Base","ja":"本体","zh-Hant":"本體","de":"Basis","es":"Base","fr":"de base","it":"Base","ko":"본체","nl":"Basis","nb":"Grunnfigur","pt":"Base","ru":"Базовая версия","tr":"Temel","ar":"النسخة الأساسية","id":"Dasar","ms":"Asas","vi":"Bản gốc","th":"ตัวพื้นฐาน","fi":"Perushahmo"};
   function translate(text) {
     if (current === 'zh') return text;
     const source = text.trim();
+    if (source === '0命（本体）') {
+      const label = current === 'ja' ? '0凸' : current === 'zh-Hant' ? '0命' : window.plannerLanguages.ranks[current][0];
+      return current === 'ja' || current === 'zh-Hant' ? label+'（'+baseWords[current]+'）' : label+' ('+baseWords[current]+')';
+    }
     let result = lookup(source);
     if (result === undefined) {
       let match;
@@ -35,24 +42,57 @@
         const prefix = match[1] ? lookup('目标')+' · ' : '';
         if (current === 'zh-Hant') {
           const skill = talents.find(key => key.endsWith(' · '+match[4]));
-          const suffix = skill ? lookup(skill).split(' · ').pop() : match[4]==='本体' ? '本體' : '';
+          const suffix = match[4]==='本体' ? '本體' : '';
           result = prefix+level+'命'+(suffix ? '（'+suffix+'）' : '')+(match[3]==='星徽'?'星徽':'');
         } else {
           result = prefix+(current==='ja' ? level+'凸' : window.plannerLanguages.ranks[current][Number(match[2])]);
+          if ((current === 'ja' || current === 'en') && match[4]) {
+            const skill = talents.find(key => key.endsWith(' · '+match[4]));
+            if (skill) result = prefix + lookup(skill);
+          }
         }
       }
     }
     return result === undefined ? text : text.replace(source,()=>result);
   }
+  const itemNames={"zh":["核心秘钥","秘钥碎片","声呐币","活动币","钻石","电路板"],"ja":["カードキー","カードの破片","ソナーコイン","イベントコイン","ダイヤ","回路ブロック"],"en":["keycards","card pieces","Sonar Coins","event coins","diamonds","circuit blocks"],"zh-Hant":["核心秘鑰","秘鑰碎片","聲納幣","活動幣","鑽石","電路板"],"de":["Schlüsselkarten","Kartenfragmente","Sonarmünzen","Eventmünzen","Diamanten","Schaltkreisblöcke"],"es":["tarjetas llave","fragmentos","monedas de sonar","monedas del evento","diamantes","bloques de circuito"],"fr":["cartes-clés","fragments","pièces sonar","pièces d’événement","diamants","blocs de circuit"],"ko":["카드 키","카드 조각","소나 코인","이벤트 코인","다이아몬드","회로 블록"],"pt":["cartões-chave","fragmentos","moedas de sonar","moedas de evento","diamantes","blocos de circuito"]};
+  function renderFormula(el, source) {
+    const parts=translate(source).split(/\{(key|shard|sonar|event|diamond|circuit)\}/);
+    el.replaceChildren(...parts.map((part,i)=>{
+      if(i%2===0)return document.createTextNode(part);
+      const img=document.createElement('img');
+      img.className='currency';
+      img.src='assets/'+part+'.png';
+      img.alt=(itemNames[current] || itemNames.en)[["key","shard","sonar","event","diamond","circuit"].indexOf(part)];
+      return img;
+    }));
+  }
   function renderText(node) {
     let source = originalText.get(node);
     if (source === undefined) {source = node.data; originalText.set(node,source);}
-    const value = translate(source);
+    let value = translate(source);
+    const chance = node.parentElement.closest('.stat b') && /^模拟达成率([\d.]+)%$/.exec(source);
+    if (chance && ['zh','ja','en'].includes(current)) {
+      value = new Intl.NumberFormat(current,{style:'percent',maximumFractionDigits:1}).format(Number(chance[1])/100);
+    }
+    const el=node.parentElement;
+    if(el.matches('.explain-copy')) value=current==='zh'?source:current==='ja'?el.dataset.ja:current==='en'?el.dataset.en:explanations[current]?.[Array.from(document.querySelectorAll('.explain-copy')).indexOf(el)] || source;
+    if(el.closest('#incomeSum,.stat b,.draw-card dl:last-child dd,.draw-table td,.income-reference tbody tr:last-child th') && /[0-9]/.test(source))value=value.replace(/[\p{Nd}]+/u,m=>approx()+m);
+    if (el.matches('.caption b') && ['zh','zh-Hant','ja'].includes(current)) value=value.replace(/中尉$/, '');
+    if (el.matches('.stat b')) value=value.replace(/(約|约)\s*(?=[\p{Nd}])/gu,'$1\u2060');
     if (value !== node.data) node.data = value;
   }
   function render(node) {
     if (node.nodeType !== 1 && node.nodeType !== 3) return;
     const parent = node.nodeType === 3 ? node.parentElement : node;
+    if (parent && parent.matches('.formula-copy')) {
+      if (node.nodeType===1) {
+        if (!originalText.has(parent)) originalText.set(parent,parent.textContent);
+        const source = parent.dataset.source;
+        renderFormula(parent,source && current !== "zh" ? source : originalText.get(parent));
+      }
+      return;
+    }
     if (!parent || parent.closest('script,style,textarea,#public-messages,.locale-menu,#planner-language')) return;
     if (node.nodeType === 3) { renderText(node); return; }
     if (node.nodeType !== 1) return;
@@ -73,6 +113,7 @@
     activeLabel.textContent = names[current];
     for (const button of list.children) button.setAttribute('aria-pressed',String(button.dataset.code===current));
     select.setAttribute('aria-label',lookup('语言'));
+    document.documentElement.style.setProperty("--approx",JSON.stringify(approx().trim()));
     render(document.body);
     render(document.querySelector('title'));
     for (const link of document.querySelectorAll('a[href]')) {

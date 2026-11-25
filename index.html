@@ -1,4 +1,4 @@
-<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#162f42"><title>《海岛奇兵》精英队长抽选规划器</title><link rel="stylesheet" href="style.css?v=L4.3.5"><link rel="stylesheet" href="community.css?v=L4.3.5"><style>
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#162f42"><title>《海岛奇兵》精英队长抽选规划器</title><link rel="stylesheet" href="style.css?v=L5.3.1"><link rel="stylesheet" href="community.css?v=L5.3.1"><style>
 #cards select{appearance:none;-webkit-appearance:none;border:2px solid #167889;background-color:#e9f6f8;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='12'%3E%3Cpath d='m3 3 6 6 6-6' fill='none' stroke='%23156778' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:40px;min-height:48px;box-shadow:0 2px 5px #123c4c18;cursor:pointer}
 #cards select:focus-visible{outline:3px solid #e7bd53;outline-offset:2px}
 #plan .fields{grid-template-columns:repeat(2,minmax(0,1fr));align-items:start}
@@ -75,11 +75,11 @@ header .credits{gap:2px;margin-right:8px}
  .draw-card dl>div:last-child{border:0}
  .draw-card dt{margin:0;font-size:14px;font-weight:500}
  .draw-card dd{margin:0;white-space:nowrap;font-weight:750;font-size:18px}
- .draw-total .draw-card-header{background:#fff2c1}
+ .draw-total .draw-card-header{background:var(--recommendation-gold)}
 }
 
 #plan .fields .resource input{padding-left:44px}
-#plan .fields .resource #pieces{padding-right:42px}
+
 #plan .resource img{pointer-events:none}
 #results .draw-table{display:none}
 .result-cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
@@ -94,7 +94,7 @@ header .credits{gap:2px;margin-right:8px}
  .draw-card dl>div:last-child{border:0}
  .draw-card dt{margin:0;font-size:14px;font-weight:500}
  .draw-card dd{margin:0;white-space:nowrap;font-weight:750;font-size:18px}
- .draw-total .draw-card-header{background:#fff2c1}
+ .draw-total .draw-card-header{background:var(--recommendation-gold)}
 .draw-card{min-width:0}
 .draw-total{grid-column:1/-1}
 .draw-total dl{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px}
@@ -116,13 +116,72 @@ header .credits{gap:2px;margin-right:8px}
 @media(max-width:760px){
  #plan .budget-fields{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px 10px}
 }
-</style></head><body><header><nav><div class="header-intro"><div><small class="planner-game-title">海岛奇兵</small><h1>精英队长抽选规划器</h1><p>填入现有核心秘钥与每月收入，自动推荐每一期到第几命收手。</p></div></div><div class="nav-actions"><div class="credits"><small>版本号：L4.3.5</small><small>作者：家恩宝贝</small><small>助理：GPT-6.2 Astra</small></div><button type="button" data-open-dialog="guide">使用说明</button><button type="button" data-open-dialog="faq">常见问题</button><a href="contact.html">联系我</a><select id="planner-language" aria-label="Language"></select><details class="other-tools"><summary>其它工具</summary><a href="https://tatsu2026.github.io/boom-beach-sonar/">声呐小助手</a></details></div></nav></header><main>
+</style><style>#plan .budget-fields>.fields:has(#tickets),#plan .budget-fields>.fields:has(#remaining){display:contents}#plan .budget-fields{grid-template-columns:minmax(0,9rem) minmax(0,10.5rem) minmax(0,9rem) minmax(0,12rem)}@media(max-width:759px){#plan .budget-fields{grid-template-columns:minmax(0,9rem) minmax(0,12rem)}}</style><style>
+#plan .budget-fields>.fields>label{align-self:end;overflow-wrap:anywhere}
+#plan .budget-fields #up{background-position:right 12px center;padding-inline:9px 36px}
+html[dir="rtl"] #plan .budget-fields #up{background-position:left 12px center}
+#sources .income-row>label:first-child{min-width:0;overflow-wrap:anywhere}
+.source-icon{inline-size:24px;block-size:24px;object-fit:contain;flex:none}
+.skill-row+.skill-row .skill-copy{border-top:1px solid #d9e4e9;padding-block-start:4px}
+.math-guide li>b{align-self:center}
+.formula-tier{display:inline-block;white-space:nowrap}
+@media(min-width:880px){
+ #plan .budget-fields{grid-template-columns:minmax(0,9rem) minmax(0,10.5rem) minmax(0,13rem) minmax(0,25rem)}
+}
+@media(max-width:879px){
+ #plan .budget-fields{grid-template-columns:minmax(0,13rem) minmax(0,25rem)}
+}
+@media(max-width:560px){
+ #plan .budget-fields{grid-template-columns:minmax(0,1fr)}
+ #plan .budget-fields .resource,#plan .budget-fields #remaining{max-inline-size:10.5rem}
+}
+</style><style>
+#plan .budget-fields>.fields>label{text-align:center}
+#plan .budget-fields :is(input,#up){text-align:center}
+#plan .budget-fields input[type=number]{appearance:textfield;padding-inline:8px}
+#plan .budget-fields .resource input[type=number]{padding-inline:36px}
+#plan .budget-fields input[type=number]::-webkit-inner-spin-button,
+#plan .budget-fields input[type=number]::-webkit-outer-spin-button{appearance:none;margin:0}
+#plan .budget-fields #up{text-align-last:center;padding-inline:32px}
+#plan .budget-fields :is(.resource,#remaining){margin-inline:auto}
+.income-reference-end{margin-block-start:10px}
+.income-reference>summary .shine-text{text-decoration:underline;text-underline-offset:3px}
+.primary .shine-text{--shine-base:#fff;--shine-highlight:#a3eeff}
+@media(prefers-reduced-motion:no-preference){
+ .shine-text{background-image:linear-gradient(90deg,var(--shine-base,#175d70) 35%,var(--shine-highlight,#398395) 49%,var(--shine-base,#175d70) 62%);background-size:350% 100%;background-position:right center;background-clip:text;color:transparent;animation:text-shine 4s linear infinite}
+}
+@keyframes text-shine{0%,20%{background-position:right center}65%,100%{background-position:left center}}
+@media(forced-colors:active){.shine-text{color:inherit;background:none;animation:none}}
+</style><style>
+#plan .budget-fields{grid-template-columns:minmax(0,1fr);max-inline-size:42rem;gap:8px}
+#plan .budget-fields>.fields>label{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,22rem);align-items:center;gap:8px 18px;text-align:start}
+#plan .budget-fields :is(.resource,#remaining,#up){margin-inline:0;max-inline-size:none;min-inline-size:0}
+#plan .budget-fields :is(.resource,#remaining){inline-size:min(100%,10rem)}
+#plan .budget-fields #up{inline-size:100%}
+@media(max-width:600px){
+ #plan .budget-fields>.fields>label{grid-template-columns:minmax(0,1fr);gap:4px}
+}
+.income-reference>summary{cursor:default}
+.income-reference>summary .shine-text{cursor:pointer}
+#planner button.primary[type=submit]{background:#9a5300;border-color:#9a5300}
+#planner button.primary[type=submit]:hover{background:#794100;border-color:#794100}
+#planner button.primary .shine-text{--shine-highlight:#fff0b9}
+</style><style>
+#plan .budget-fields .resource{display:inline-flex;align-items:center;gap:8px;inline-size:max-content;direction:ltr}
+#plan .budget-fields .resource img{position:static;transform:none;flex:none}
+#plan .budget-fields .resource input[type=number],#plan .budget-fields #remaining{inline-size:4.5rem;padding-inline:6px;text-align:center}
+#plan .budget-fields #up{inline-size:max-content;max-inline-size:100%;text-align:left;text-align-last:left;padding-inline:10px 36px}
+html[dir="rtl"] #plan .budget-fields #up{padding-inline:36px 10px}
+</style><style>:root{--recommendation-gold:linear-gradient(135deg,#ffda37 0%,#ffcc00 55%,#efb600 100%)}
+#plan .budget-fields>.fields>label>span:first-child{font-size:16px;line-height:1.4;text-align:start}
+#plan .budget-fields :is(input,select,.resource){margin-block-start:0}
+</style></head><body><header><nav><div class="header-intro"><div><small class="planner-game-title">海岛奇兵</small><h1>精英队长抽选规划器</h1><p>填入现有核心秘钥与每月收入，自动推荐每一期到第几命收手。</p></div></div><div class="nav-actions"><div class="credits"><small>版本号：L5.3.1</small><small>作者：家恩宝贝</small><small>助理：GPT-6.2 Astra</small></div><button type="button" data-open-dialog="guide">使用说明</button><button type="button" data-open-dialog="faq">常见问题</button><a href="contact.html">联系我</a><select id="planner-language" aria-label="Language"></select><details class="other-tools"><summary>其它工具</summary><a href="https://tatsu2026.github.io/boom-beach-sonar/">声呐小助手</a></details></div></nav></header><main>
 
 <form id="planner"><div id="cards"></div>
-<section class="panel" id="plan"><h2>我的核心秘钥预算</h2><div class="budget-fields"><div class="fields"><label>现有核心秘钥<span class="resource"><img alt="" src="assets/key.png"><input id="tickets" type="number" min="0" max="999999" step="1" placeholder="按游戏显示填写" required></span></label><label>现有秘钥碎片<span class="resource"><img alt="" src="assets/shard.png"><input id="pieces" type="number" min="0" max="99999999" step="1" placeholder="按游戏显示填写" required><span class="piece-buttons"><button type="button" data-change="100" aria-label="增加100个碎片">▴</button><button type="button" data-change="-100" aria-label="减少100个碎片">▾</button></span></span></label></div>
-<div class="fields"><label>距离保底次数<input id="remaining" type="number" min="1" max="80" step="1" placeholder="按游戏显示填写" required></label><label>保底类型<select id="up" required><option value="">请选择保底类型</option><option value="0">50% 为当期队长</option><option value="1">100% 为当期队长</option></select></label></div>
-</div><h3>每月能攒多少抽</h3><fieldset id="sources"><legend>填写各项每月抽数，未填写按0计算</legend><div class="income-row"><label>每日任务</label><label class="income-amount"><input type="number" min="0" step="1" placeholder="0" id="amount0" aria-label="每日任务每月抽数"><span>抽/月</span></label></div><div class="income-row"><label>邪恶商店</label><label class="income-amount"><input type="number" min="0" step="1" placeholder="0" id="amount1" aria-label="邪恶商店每月抽数"><span>抽/月</span></label></div><div class="income-row"><label>电路商店</label><label class="income-amount"><input type="number" min="0" step="1" placeholder="0" id="amount2" aria-label="电路商店每月抽数"><span>抽/月</span></label></div><div class="income-row"><label>海岛战令</label><label class="income-amount"><input type="number" min="0" step="1" placeholder="0" id="amount3" aria-label="海岛战令每月抽数"><span>抽/月</span></label></div><div class="income-row"><label>周卡</label><label class="income-amount"><input type="number" min="0" step="1" placeholder="0" id="amount4" aria-label="周卡每月抽数"><span>抽/月</span></label></div><div class="income-row"><label>队长部署</label><label class="income-amount"><input type="number" min="0" step="1" placeholder="0" id="amount5" aria-label="队长部署每月抽数"><span>抽/月</span></label></div><div class="income-row"><label>闪电战</label><label class="income-amount"><input type="number" min="0" step="1" placeholder="0" id="amount6" aria-label="闪电战每月抽数"><span>抽/月</span></label></div><div class="income-row"><label>声呐活动</label><label class="income-amount"><input type="number" min="0" step="1" placeholder="0" id="amount7" aria-label="声呐活动每月抽数"><span>抽/月</span></label></div><strong id="incomeSum"></strong></fieldset><section class="income-reference" aria-labelledby="income-reference-title"><h3 id="income-reference-title">每月抽数来源参考</h3><div class="actions"><button type="button" id="fillFree">一键填入（零氪）</button><button type="button" id="fillPaid">一键填入（全购）</button></div><table><thead><tr><th>来源</th><th>零氪</th><th>战令、周卡全购</th></tr></thead><tbody><tr><td>每日任务</td><td>15</td><td>15</td></tr><tr><td>邪恶商店</td><td>10</td><td>10</td></tr><tr><td>电路商店</td><td>5</td><td>5</td></tr><tr><td>海岛战令</td><td>5</td><td>20</td></tr><tr><td>周卡</td><td>0</td><td>100</td></tr><tr><td>队长部署</td><td>16</td><td>40</td></tr><tr><td>闪电战</td><td>8</td><td>18</td></tr><tr><td>声呐活动</td><td>10</td><td>20</td></tr><tr><th>合计</th><th>69 抽</th><th>228 抽</th></tr></tbody></table><p class="note">以下为参考数量，请根据实际情况填写每月收入。按每期一个月、完成上述任务和兑换计算，包含声呐活动。电路商店每月需 500 电路板。</p></section>
-<div class="actions"><button type="submit" class="primary">查看抽取规划</button><span id="state" role="status"></span></div></section></form>
+<section class="panel" id="plan"><h2>我的核心秘钥预算</h2><div class="budget-fields"><div class="fields"><label><span>现有核心秘钥</span><span class="resource"><input id="tickets" type="number" inputmode="numeric" min="0" max="999999" step="1" placeholder="按游戏显示填写" required><img alt="" src="assets/key.png"></span></label><label><span>现有秘钥碎片</span><span class="resource"><input id="pieces" type="number" inputmode="numeric" min="0" max="99999999" step="1" placeholder="按游戏显示填写" required><img alt="" src="assets/shard.png"></span></label></div>
+<div class="fields"><label><span>距离保底次数</span><input id="remaining" type="number" inputmode="numeric" min="1" max="80" step="1" placeholder="按游戏显示填写" required></label><label><span>保底类型</span><select id="up" required><option value="">请选择保底类型</option><option value="0">50% 为当期队长</option><option value="1">100% 为当期队长</option></select></label></div>
+</div><h3>每月能攒多少抽</h3><fieldset id="sources"><legend>按来源填写每月能攒多少抽，留空按 0 抽计算。</legend><div class="income-row"><label><img class="source-icon" alt="" src="assets/key.png"><span>周卡</span></label><label class="income-amount"><input type="number" min="0" step="1" placeholder="0" id="amount4" aria-label="周卡每月抽数"><span>抽/月</span></label></div><div class="income-row"><label><img class="source-icon" alt="" src="assets/boom-pass.png"><span>海岛战令</span></label><label class="income-amount"><input type="number" min="0" step="1" placeholder="0" id="amount3" aria-label="海岛战令每月抽数"><span>抽/月</span></label></div><div class="income-row"><label><img class="source-icon" alt="" src="assets/daily-task.png"><span>每日任务</span></label><label class="income-amount"><input type="number" min="0" step="1" placeholder="0" id="amount0" aria-label="每日任务每月抽数"><span>抽/月</span></label></div><div class="income-row"><label><img class="source-icon" alt="" src="assets/evil-shop.png"><span>邪恶商店</span></label><label class="income-amount"><input type="number" min="0" step="1" placeholder="0" id="amount1" aria-label="邪恶商店每月抽数"><span>抽/月</span></label></div><div class="income-row"><label><img class="source-icon" alt="" src="assets/circuit.png"><span>电路商店</span></label><label class="income-amount"><input type="number" min="0" step="1" placeholder="0" id="amount2" aria-label="电路商店每月抽数"><span>抽/月</span></label></div><div class="income-row"><label><img class="source-icon" alt="" src="assets/sonar.png"><span>声呐活动</span></label><label class="income-amount"><input type="number" min="0" step="1" placeholder="0" id="amount7" aria-label="声呐活动每月抽数"><span>抽/月</span></label></div><div class="income-row"><label><img class="source-icon" alt="" src="assets/event.png"><span>队长部署</span></label><label class="income-amount"><input type="number" min="0" step="1" placeholder="0" id="amount5" aria-label="队长部署每月抽数"><span>抽/月</span></label></div><div class="income-row"><label><img class="source-icon" alt="" src="assets/blitz.png"><span>闪电战</span></label><label class="income-amount"><input type="number" min="0" step="1" placeholder="0" id="amount6" aria-label="闪电战每月抽数"><span>抽/月</span></label></div><strong id="incomeSum"></strong></fieldset><details class="income-reference"><summary id="income-reference-title"><span class="shine-text">每月抽数来源参考</span></summary><div class="actions"><button type="button" id="fillFree">一键填入（零氪）</button><button type="button" id="fillPaid">一键填入（全购）</button></div><table><thead><tr><th>来源</th><th>零氪</th><th>氪金</th></tr></thead><tbody><tr><td>周卡</td><td>0</td><td>100</td></tr><tr><td>海岛战令</td><td>5</td><td>20</td></tr><tr><td>每日任务</td><td>15</td><td>15</td></tr><tr><td>邪恶商店</td><td>10</td><td>10</td></tr><tr><td>电路商店</td><td>5</td><td>5</td></tr><tr><td>声呐活动</td><td>10</td><td>25</td></tr><tr><td>队长部署</td><td>16</td><td>40</td></tr><tr><td>闪电战</td><td>8</td><td>18</td></tr><tr><th>合计</th><th>69 抽</th><th>233 抽</th></tr></tbody></table><p class="note">以下为参考数量，请根据实际情况填写每月收入。按每期一个月、完成上述任务和兑换计算，包含声呐活动。电路商店每月需 500 电路板。</p><div class="math-guide"><h4>计算方法</h4><ol><li><b>周卡</b><div><strong class="formula-result"><span class="formula-tier"><span>零氪</span> 0 <span>抽</span></span> / <span class="formula-tier"><span>氪金</span> 100 <span>抽</span></span></strong><p class="formula-copy">周卡七天共给20{key}。按30天估算，每6天买一次，一个月可买5次，合计100{key}。</p><p class="formula-copy formula-note">※ 第7天领完奖励当天即可续购，因此按6天的间隔计算。</p></div></li><li><b>海岛战令</b><div><strong class="formula-result"><span class="formula-tier"><span>零氪</span> 5 <span>抽</span></span> / <span class="formula-tier"><span>氪金</span> 20 <span>抽</span></span></strong><p class="formula-copy">免费档给5{key}，付费档额外给15{key}，付费合计20{key}。</p></div></li><li><b>每日任务</b><div><strong class="formula-result">15 <span>抽</span></strong><p class="formula-copy">每天可得100{shard}。按30天计算共3,000{shard}，每200{shard}可换1{key}，合计15{key}。</p></div></li><li><b>邪恶商店</b><div><strong class="formula-result">10 <span>抽</span></strong><p class="formula-copy">每周可换2{key}，按4周算是8{key}，再加每月可换的2{key}，合计10{key}。</p></div></li><li><b>电路商店</b><div><strong class="formula-result">5 <span>抽</span></strong><p class="formula-copy">每100{circuit}可换1{key}。每月用500块电路板，共可换5张核心秘钥。</p></div></li><li><b>声呐活动</b><div><strong class="formula-result"><span class="formula-tier"><span>零氪</span> 10 <span>抽</span></span> / <span class="formula-tier"><span>氪金</span> 25 <span>抽</span></span></strong><p class="formula-copy">免费路线通常推进至第18海域附近，把任务获得的3,000{sonar}兑换成2,000{shard}，折合10{key}。付费路线约有20～30抽，一键输入（全购）取中间值25抽。</p></div></li><li><b>队长部署</b><div><div class="formula-route"><strong><span>零氪</span> 16 <span>抽</span></strong><p class="formula-copy" data-source="免费通行证说明">免费通行证直接给6张核心秘钥和5,000{event}。用这些活动币换2,000{shard}，折合10抽。</p></div><div class="formula-route"><strong><span>氪金</span> 40 <span>抽</span></strong><p class="formula-copy" data-source="尊享战令说明">尊享战令额外给12张核心秘钥和6,750活动币，两档共18张核心秘钥和11,750活动币。用10,000活动币换20抽，再用1,200活动币换2抽。</p></div><p class="formula-copy formula-note">※ 用350{diamond}额外购买500{event}后，可多兑换1{key}，合计约41{key}。若把商店碎片全换完，商店可得45{key}，加上通行证的18{key}，合计约63{key}。</p></div></li><li><b>闪电战</b><div><strong class="formula-result"><span class="formula-tier"><span>零氪</span> 8 <span>抽</span></span> / <span class="formula-tier"><span>氪金</span> 18 <span>抽</span></span></strong><p class="formula-copy">免费路线每月约8{key}，付费路线每月约18{key}。</p></div></li></ol></div><button type="button" class="income-reference-end"><span class="shine-text">收起每月抽数来源参考</span></button></details>
+<div class="actions"><button type="submit" class="primary"><span class="shine-text">查看 AI 推荐</span></button><span id="state" role="status"></span></div></section></form>
 <section class="panel" id="results" aria-live="polite"></section>
 <details class="panel"><summary>推荐依据</summary><p>按科菲、安娜、林尼亚的预计返场顺序计算三期预算。预算很紧时优先争取林尼亚本体。按科菲、安娜、林尼亚的顺序，基础目标为0／0／1，之后争取0／1／2。再用余券优先争取林尼亚4命增伤和5命复活。科菲通常在本体或2命收手，安娜通常在1命收手。预算宽裕时再考虑安娜2命和两人的3命。通用方案达到3／3／5后建议存券，已有的更高命座会保留。</p><p>系统根据中尉的招募概率模拟5,000次，计算时继承当前中尉招募进度和大小保底状态。通常选择预计达成概率至少90%的方案。预算不足时，会显示集中存券争取林尼亚本体的机会。首次获得队长为0命，每重复获得一次提升1命。修改设置后会立即重新计算。</p><a href="https://support.supercell.com/boom-beach/zh/articles/drop-chances.html">Supercell 招募概率说明</a></details><section class="community-wrap" id="guestbook" aria-labelledby="guestbook-title">
   <div class="card community-card">
@@ -133,7 +192,7 @@ header .credits{gap:2px;margin-right:8px}
     <div class="community-columns">
       <div class="message-feed">
         <div class="feed-tools"><h3 data-word="recent">最新留言</h3>
-          <button type="button" id="refresh-messages" data-word="refresh">刷新</button></div>
+          </div>
         <p id="feed-state" class="community-note" role="status"></p>
         <ol id="public-messages"></ol>
         <button type="button" id="older-messages" data-word="older" hidden>查看更多</button>
@@ -143,7 +202,7 @@ header .credits{gap:2px;margin-right:8px}
         <input id="guest-name" name="nickname" autocomplete="nickname" required>
         <label for="guest-text" data-word="message">留言</label>
         <textarea id="guest-text" name="message" rows="3" required></textarea>
-        <div class="form-actions"><button id="publish-message" type="submit" data-word="publish">发表留言</button></div>
+        <div class="form-actions"><button id="publish-message" type="submit" data-word="publish">发表留言</button><button type="button" id="refresh-messages" data-word="refresh">刷新</button></div>
         <p id="post-state" class="community-note" role="status"></p>
       </form>
     </div>
@@ -152,8 +211,8 @@ header .credits{gap:2px;margin-right:8px}
 <h3>填写当前招募情况</h3><p>先为三位队长选择当前命座，首次获得为0命。现有核心秘钥、现有秘钥碎片、距离保底次数和保底类型为必填项，数量为零时填写0。距离保底次数请照填游戏显示的1至80之间的数字。</p>
 <h3>选择各自的目标</h3><p>每位队长可以独立选择自动推荐、具体命座或本期跳过。系统会结合你的自选目标和三期预算，为自动推荐的队长安排目标。目标低于当前命座时，按无需追加抽取处理。</p>
 <h3>填写每月能攒多少抽</h3><p>直接填写各渠道每月预计获得的抽数，留空按0计算。可以查看下方抽数来源参考表，点击一键填入后仍可逐项调整。按每期一个月计算，秘钥碎片每200个折算1抽。</p>
-<h3>查看抽取规划</h3><p>填写完整后自动更新结果，也可以点击查看抽取规划。累计预算是假设之前没有消耗时，到各期末共能攒到的抽数。每位队长所需抽数从上一目标完成后起算。</p>
-<p>平均需要多少抽为模拟的平均值。多少抽有90%把握表示约90%的模拟能在该抽数内达到目标。按期达成全部目标的概率同时考虑三位队长的返场顺序和各期预算。</p>
+<h3>查看 AI 推荐</h3><p>填完必填项后，结果会自动更新。点击「查看 AI 推荐」可跳到结果区。累计预算指到各期结束时、扣除花费前一共能用多少抽。每位队长的所需抽数从上一目标达成后算起。</p>
+<p>平均抽数取自模拟结果。90% 达成参考表示约九成模拟能在这个抽数内达标。全部目标的模拟达成率会考虑返场顺序和各期可用抽数。</p>
 <p>设置会自动保存在当前浏览器，换设备或清理浏览器数据后需要重新填写。</p></dialog>
 <dialog id="faq" aria-labelledby="faq-title"><div class="dialog-header"><h2 id="faq-title">常见问题</h2><button type="button" data-close-dialog aria-label="关闭常见问题">×</button></div>
 <details><summary>保底类型怎么选？</summary><p>下一位中尉有50%概率为当期队长时选50%，下一位中尉必定为当期队长时选100%。请根据游戏中的当前招募状态填写。</p></details>
@@ -162,4 +221,4 @@ header .credits{gap:2px;margin-right:8px}
 <details><summary>为什么三期合计与各行的90%抽数相加不同？</summary><p>三期合计按整条招募过程统计。各位队长的90%抽数分别取自对应过程，把它们相加会得到不同的数值。</p></details>
 <details><summary>为什么资料没填完时没有结果？</summary><p>四项招募资料必须完整填写，才能依据当前预算与保底进度计算。每月收入允许留空，按0处理。</p></details>
 <details><summary>参考表里的抽数能直接套用吗？</summary><p>表格供参考，请根据自己的任务完成情况和购买情况填写每月抽数。计算假设每期一个月、填写的收入均能到账。</p></details>
-<details><summary>填写的数据保存在哪里？</summary><p>招募设置保存在当前浏览器。其他访客使用各自的设置，换设备时需要重新填写。</p></details></dialog><script src="engine.js?v=L4.3.5"></script><script src="app.js?v=L4.3.5"></script><script src="settings.js?v=L4.3.5"></script><script src="languages.js?v=L4.3.5"></script><script src="language.js?v=L4.3.5"></script><script defer src="community.js?v=L4.3.5"></script></body></html>
+<details><summary>填写的数据保存在哪里？</summary><p>招募设置保存在当前浏览器。其他访客使用各自的设置，换设备时需要重新填写。</p></details></dialog><script src="engine.js?v=L5.3.1"></script><script src="app.js?v=L5.3.1"></script><script src="settings.js?v=L5.3.1"></script><script src="languages.js?v=L5.3.1"></script><script src="language.js?v=L5.3.1"></script><script defer src="community.js?v=L5.3.1"></script></body></html>
