@@ -115,6 +115,19 @@
     select.setAttribute('aria-label',lookup('语言'));
     document.documentElement.style.setProperty("--approx",JSON.stringify(approx().trim()));
     render(document.body);
+    const fields = document.querySelector('.budget-fields');
+    if (fields) {
+      const context = document.createElement('canvas').getContext('2d');
+      if (context) {
+        const inputs = [...fields.querySelectorAll('input[type="number"]')];
+        const width = Math.max(72, ...inputs.map(input => {
+          const style = getComputedStyle(input, '::placeholder');
+          context.font = [style.fontWeight, style.fontSize, style.fontFamily].join(' ');
+          return Math.ceil(context.measureText(input.placeholder).width) + 34;
+        }));
+        fields.style.setProperty('--budget-input-width', width + 'px');
+      }
+    }
     render(document.querySelector('title'));
     for (const link of document.querySelectorAll('a[href]')) {
       const target = new URL(link.href,location.href);

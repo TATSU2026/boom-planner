@@ -1,4 +1,4 @@
-<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#162f42"><title>《海岛奇兵》精英队长抽选规划器</title><link rel="stylesheet" href="style.css?v=L5.3.1"><link rel="stylesheet" href="community.css?v=L5.3.1"><style>
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#162f42"><title>《海岛奇兵》精英队长抽选规划器</title><link rel="stylesheet" href="style.css?v=L5.3.2"><link rel="stylesheet" href="community.css?v=L5.3.2"><style>
 #cards select{appearance:none;-webkit-appearance:none;border:2px solid #167889;background-color:#e9f6f8;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='12'%3E%3Cpath d='m3 3 6 6 6-6' fill='none' stroke='%23156778' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:40px;min-height:48px;box-shadow:0 2px 5px #123c4c18;cursor:pointer}
 #cards select:focus-visible{outline:3px solid #e7bd53;outline-offset:2px}
 #plan .fields{grid-template-columns:repeat(2,minmax(0,1fr));align-items:start}
@@ -175,7 +175,15 @@ html[dir="rtl"] #plan .budget-fields #up{padding-inline:36px 10px}
 </style><style>:root{--recommendation-gold:linear-gradient(135deg,#ffda37 0%,#ffcc00 55%,#efb600 100%)}
 #plan .budget-fields>.fields>label>span:first-child{font-size:16px;line-height:1.4;text-align:start}
 #plan .budget-fields :is(input,select,.resource){margin-block-start:0}
-</style></head><body><header><nav><div class="header-intro"><div><small class="planner-game-title">海岛奇兵</small><h1>精英队长抽选规划器</h1><p>填入现有核心秘钥与每月收入，自动推荐每一期到第几命收手。</p></div></div><div class="nav-actions"><div class="credits"><small>版本号：L5.3.1</small><small>作者：家恩宝贝</small><small>助理：GPT-6.2 Astra</small></div><button type="button" data-open-dialog="guide">使用说明</button><button type="button" data-open-dialog="faq">常见问题</button><a href="contact.html">联系我</a><select id="planner-language" aria-label="Language"></select><details class="other-tools"><summary>其它工具</summary><a href="https://tatsu2026.github.io/boom-beach-sonar/">声呐小助手</a></details></div></nav></header><main>
+</style><style>
+#plan .budget-fields>.fields>label{grid-template-columns:minmax(0,1fr) minmax(0,22rem)}
+#plan .budget-fields :is(.resource,#remaining).resource{inline-size:max-content;max-inline-size:100%;min-inline-size:0}
+#plan .budget-fields .resource input[type=number],#plan .budget-fields #remaining{inline-size:var(--budget-input-width,4.5rem);max-inline-size:100%;min-inline-size:0}
+#sources .income-row+.income-row{border-top:1px solid #d9e4e9}
+@media(max-width:600px){
+ #plan .budget-fields>.fields>label{grid-template-columns:minmax(0,1fr)}
+}
+</style></head><body><header><nav><div class="header-intro"><div><small class="planner-game-title">海岛奇兵</small><h1>精英队长抽选规划器</h1><p>填入现有核心秘钥与每月收入，自动推荐每一期到第几命收手。</p></div></div><div class="nav-actions"><div class="credits"><small><span>版本号：</span> <bdi>L5.3.2</bdi></small><small>作者：家恩宝贝</small><small>助理：GPT-6.2 Astra</small></div><button type="button" data-open-dialog="guide">使用说明</button><button type="button" data-open-dialog="faq">常见问题</button><a href="contact.html">联系我</a><select id="planner-language" aria-label="Language"></select><details class="other-tools"><summary>其它工具</summary><a href="https://tatsu2026.github.io/boom-beach-sonar/">声呐小助手</a></details></div></nav></header><main>
 
 <form id="planner"><div id="cards"></div>
 <section class="panel" id="plan"><h2>我的核心秘钥预算</h2><div class="budget-fields"><div class="fields"><label><span>现有核心秘钥</span><span class="resource"><input id="tickets" type="number" inputmode="numeric" min="0" max="999999" step="1" placeholder="按游戏显示填写" required><img alt="" src="assets/key.png"></span></label><label><span>现有秘钥碎片</span><span class="resource"><input id="pieces" type="number" inputmode="numeric" min="0" max="99999999" step="1" placeholder="按游戏显示填写" required><img alt="" src="assets/shard.png"></span></label></div>
@@ -221,4 +229,4 @@ html[dir="rtl"] #plan .budget-fields #up{padding-inline:36px 10px}
 <details><summary>为什么三期合计与各行的90%抽数相加不同？</summary><p>三期合计按整条招募过程统计。各位队长的90%抽数分别取自对应过程，把它们相加会得到不同的数值。</p></details>
 <details><summary>为什么资料没填完时没有结果？</summary><p>四项招募资料必须完整填写，才能依据当前预算与保底进度计算。每月收入允许留空，按0处理。</p></details>
 <details><summary>参考表里的抽数能直接套用吗？</summary><p>表格供参考，请根据自己的任务完成情况和购买情况填写每月抽数。计算假设每期一个月、填写的收入均能到账。</p></details>
-<details><summary>填写的数据保存在哪里？</summary><p>招募设置保存在当前浏览器。其他访客使用各自的设置，换设备时需要重新填写。</p></details></dialog><script src="engine.js?v=L5.3.1"></script><script src="app.js?v=L5.3.1"></script><script src="settings.js?v=L5.3.1"></script><script src="languages.js?v=L5.3.1"></script><script src="language.js?v=L5.3.1"></script><script defer src="community.js?v=L5.3.1"></script></body></html>
+<details><summary>填写的数据保存在哪里？</summary><p>招募设置保存在当前浏览器。其他访客使用各自的设置，换设备时需要重新填写。</p></details></dialog><script src="engine.js?v=L5.3.2"></script><script src="app.js?v=L5.3.2"></script><script src="settings.js?v=L5.3.2"></script><script src="languages.js?v=L5.3.2"></script><script src="language.js?v=L5.3.2"></script><script defer src="community.js?v=L5.3.2"></script></body></html>
