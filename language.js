@@ -18,7 +18,7 @@
   try { saved = localStorage.getItem(preference); } catch {}
   let current = supported(url.searchParams.get('lang')) || supported(saved)
     || (navigator.languages || [navigator.language]).map(supported).find(Boolean) || 'zh';
-  const lookup = text => current === 'zh' ? text : packs[current][indices.get(text)];
+  const lookup = text => current === 'zh' ? text : packs[current]?.[indices.get(text)];
   const talents = keys.filter(key => /^[一二三四五]命 · /.test(key));
   const number = value => new Intl.NumberFormat(current, {useGrouping:false}).format(Number(value));
   const explanations={"de":["Nach der Belohnung am siebten Tag ist der nächste Kauf sofort möglich.","Um Seegebiet 18 reichen die Sonarmünzen für 2.000 Fragmente. Der bezahlte Richtwert liegt bei etwa 25 Versuchen.","Mit Premium-Pass etwa 40 Versuche, mit 350 Diamanten etwa 41, mit allen Fragmenten etwa 63."],"es":["Puedes renovar al cobrar el séptimo día.","Cerca de la zona 18, las monedas de sonar permiten conseguir 2.000 fragmentos. La estimación de pago es de unas 25 tiradas.","Unas 40 tiradas con el pase, 41 al añadir 350 diamantes y 63 al comprar todos los fragmentos."],"fr":["Le pass peut être renouvelé dès la récompense du septième jour.","Vers la zone 18, les pièces sonar permettent d’obtenir 2 000 fragments. Le forfait payant prévoit environ 25 tirages.","Environ 40 tirages avec le pass, 41 avec 350 diamants supplémentaires et 63 en achetant tous les fragments."],"it":["Puoi rinnovare appena ritiri il premio del settimo giorno.","Intorno alla zona 18 le monete sonar bastano per 2.000 frammenti. La stima a pagamento è di circa 25 estrazioni.","Circa 40 estrazioni con il pass, 41 aggiungendo 350 diamanti e 63 acquistando tutti i frammenti."],"ko":["7일째 보상을 받으면 바로 다시 구매할 수 있습니다.","18해역 부근에서 모은 소나 코인으로 조각 2,000개를 교환합니다. 유료 기준은 약 25회입니다.","패스 구매 시 약 40회, 다이아몬드 350개 추가 시 약 41회, 조각 전량 교환 시 약 63회입니다."],"nl":["Na de beloning op dag zeven kun je direct verlengen.","Rond zeegebied 18 leveren sonarmunten 2.000 fragmenten op. De betaalde schatting is ongeveer 25 trekkingen.","Met de pas ongeveer 40 trekkingen, met 350 extra diamanten 41 en met alle fragmenten 63."],"nb":["Du kan fornye straks du har hentet belønningen på dag sju.","Rundt havområde 18 gir sonarmyntene 2 000 fragmenter. Betalt anslag er omtrent 25 trekk.","Omtrent 40 trekk med passet, 41 med 350 ekstra diamanter og 63 med alle fragmentene."],"pt":["Pode renovar logo após receber a recompensa do sétimo dia.","Por volta da zona 18, as moedas de sonar rendem 2.000 fragmentos. A estimativa paga é de cerca de 25 sorteios.","Cerca de 40 sorteios com o passe, 41 com mais 350 diamantes e 63 ao comprar todos os fragmentos."],"ru":["После получения награды за седьмой день пропуск можно сразу купить снова.","Примерно у 18-го морского района монет сонара хватает на 2 000 фрагментов. Ориентир с покупками — около 25 попыток.","С пропуском около 40 попыток, с доплатой 350 алмазов — 41, при покупке всех фрагментов — 63."],"tr":["Yedinci günün ödülünü alınca hemen yeniden satın alabilirsiniz.","18. deniz bölgesi civarında sonar paralarıyla 2.000 parça alınabilir. Ücretli tahmin yaklaşık 25 çekiliştir.","Biletle yaklaşık 40, ek 350 elmasla 41, tüm parçalarla 63 çekiliş."],"ar":["يمكن تجديد البطاقة فور استلام مكافأة اليوم السابع.","قرب المنطقة البحرية 18 تكفي عملات السونار لشراء 2000 شظية. التقدير المدفوع نحو 25 سحبة.","نحو 40 سحبة مع التصريح، و41 بإضافة 350 ماسة، و63 عند شراء جميع الشظايا."],"id":["Setelah mengambil hadiah hari ketujuh, kamu bisa langsung membeli lagi.","Di sekitar wilayah laut 18, koin sonar cukup untuk 2.000 pecahan. Perkiraan berbayar sekitar 25 undian.","Sekitar 40 undian dengan pas, 41 dengan tambahan 350 berlian, dan 63 jika membeli semua pecahan."],"ms":["Selepas menuntut ganjaran hari ketujuh, pas boleh dibeli semula serta-merta.","Sekitar kawasan laut 18, syiling sonar mencukupi untuk 2,000 serpihan. Anggaran berbayar kira-kira 25 cabutan.","Kira-kira 40 cabutan dengan pas, 41 dengan tambahan 350 berlian dan 63 jika membeli semua serpihan."],"vi":["Có thể mua tiếp ngay khi nhận thưởng ngày thứ bảy.","Đến khoảng vùng biển 18, xu sonar đủ đổi 2.000 mảnh. Mức trả phí ước tính khoảng 25 lượt.","Khoảng 40 lượt với vé cao cấp, 41 lượt nếu dùng thêm 350 kim cương và 63 lượt khi mua hết mảnh."],"th":["ซื้อรอบใหม่ได้ทันทีหลังรับรางวัลวันที่เจ็ด","เมื่อถึงบริเวณน่านน้ำที่ 18 เหรียญโซนาร์จะพอแลกชิ้นส่วน 2,000 ชิ้น แบบเติมเงินประเมินไว้ประมาณ 25 ครั้ง","ซื้อพาสได้ประมาณ 40 ครั้ง ใช้เพชรเพิ่ม 350 เม็ดได้ประมาณ 41 ครั้ง และซื้อชิ้นส่วนทั้งหมดได้ประมาณ 63 ครั้ง"],"fi":["Voit uusia passin heti seitsemännen päivän palkinnon jälkeen.","Merialueen 18 tienoilla kaikuluotainkolikot riittävät 2 000 sirpaleeseen. Maksullinen arvio on noin 25 arvontaa.","Passilla noin 40 arvontaa, 350 lisätimantilla 41 ja kaikilla sirpaleilla 63."],"zh-Hant":["領完第七天獎勵，當天即可續購。","推進到第18海域附近，用聲納幣換取2,000個碎片。付費預設約25抽。","尊享戰令約40抽，另用350鑽石可達約41抽，換完商店碎片合計約63抽。"]};
@@ -62,7 +62,7 @@
       if(i%2===0)return document.createTextNode(part);
       const img=document.createElement('img');
       img.className='currency';
-      img.src='assets/'+part+'.png';
+      img.src='assets/'+part+'.webp';
       img.alt=(itemNames[current] || itemNames.en)[["key","shard","sonar","event","diamond","circuit"].indexOf(part)];
       return img;
     }));
@@ -169,11 +169,22 @@
     current = select.value;
     try {localStorage.setItem(preference,current);} catch {}
     try {const next=new URL(location.href);next.searchParams.set('lang',current);history.replaceState(null,'',next);} catch {}
-    apply();
+    loadPack(current).then(apply);
   };
-  apply();
-  new MutationObserver(records => {
-    for (const record of records) for (const node of record.addedNodes) render(node);
-  }).observe(document.body,{subtree:true,childList:true});
+  function loadPack(code) {
+    return new Promise(done => {
+      if (code === 'zh' || packs[code]) return done();
+      const script = document.createElement('script');
+      script.src = 'lang/' + code + '.js?v=L5.5.2';
+      script.onload = script.onerror = () => done();
+      document.head.append(script);
+    });
+  }
+  loadPack(current).then(() => {
+    new MutationObserver(records => {
+      for (const record of records) for (const node of record.addedNodes) render(node);
+    }).observe(document.body,{subtree:true,childList:true});
+    apply();
+  });
 })();
 

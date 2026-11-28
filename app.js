@@ -14,9 +14,9 @@ const $=id=>document.getElementById(id),val=id=>Number($(id).value);
 const fullNames=['科菲·恩武努中尉','安娜·施林格尔中尉','林尼亚·弗里斯可达中尉'];
 const nicknames=['冷酷法则！','战术戏法！','混乱也是治病良方！'];
 const rank=(n,i)=>n<0?'未持有':n===0?'0命（本体）':n+'命（'+leaders[i].skills[n+1][0].split(' · ')[1]+'）';
-const badge=n=>n>=0?'<img class="rank-badge" src="assets/rank'+n+'.png" alt="'+n+'命星徽">':'';
+const badge=n=>n>=0?'<img class="rank-badge" src="assets/rank'+n+'.webp" alt="'+n+'命星徽">':'';
 
-$('cards').innerHTML=leaders.map((l,i)=>`<article><div class="portrait"><img src="assets/${l.img}.jpg" alt="${l.name}"><div class="caption"><small>预计第${'一二三'[i]}期</small><b>${fullNames[i]}</b><span>${nicknames[i]}</span></div></div><button class="skill-toggle" type="button" aria-expanded="false">查看技能</button><div class="cardbody"><label>当前命座<select id="own${i}">${Array.from({length:7},(_,j)=>`<option value="${j-1}" >${rank(j-1,i)}</option>`).join('')}</select></label><label class="goal-picker">目标命座<select id="target${i}"><option value="auto">自动推荐</option><option value="-1">本期跳过</option>${Array.from({length:6},(_,n)=>`<option value="${n}">${rank(n,i)}</option>`).join('')}</select></label><div class="skills" hidden><dl>${l.skills.map(([k,v])=>`<div class="skill-row"><div class="skill-copy"><dt>${k}</dt><dd>${v}</dd></div></div>`).join('')}</dl></div></div></article>`).join('');
+$('cards').innerHTML=leaders.map((l,i)=>`<article><div class="portrait"><img src="assets/${l.img}.webp" alt="${l.name}"><div class="caption"><small>预计第${'一二三'[i]}期</small><b>${fullNames[i]}</b><span>${nicknames[i]}</span></div></div><button class="skill-toggle" type="button" aria-expanded="false" aria-controls="skills0 skills1 skills2">查看技能</button><div class="cardbody"><label>当前命座<select id="own${i}">${Array.from({length:7},(_,j)=>`<option value="${j-1}" >${rank(j-1,i)}</option>`).join('')}</select></label><label class="goal-picker">目标命座<select id="target${i}"><option value="auto">自动推荐</option><option value="-1">本期跳过</option>${Array.from({length:6},(_,n)=>`<option value="${n}">${rank(n,i)}</option>`).join('')}</select></label><div class="skills" id="skills${i}" hidden><dl>${l.skills.map(([k,v])=>`<div class="skill-row"><div class="skill-copy"><dt>${k}</dt><dd>${v}</dd></div></div>`).join('')}</dl></div></div></article>`).join('');
 const skillLists=[...document.querySelectorAll('.skills dl')];
 function alignSkills(){
  const columns=new Set(skillLists.map(list=>list.closest('article').offsetTop)).size===1;
@@ -49,31 +49,52 @@ const reasons=[
  ['先解锁安娜，获得状态延长能力。','一命让队员受到状态效果时也能提供弹药。','二命解锁 15% 腐蚀易伤，适合用余券补强集火输出。','三命提升两项技能等级，进一步强化状态支援。','四命将负面状态反作用于施加者，依赖战场环境。','五命增加友军净化，适合经常受到负面状态的队伍。'],
  ['先解锁林尼亚，获得治疗与减伤。','一命将溢出爆发治疗转成护盾。','二命将减伤范围扩大到 6 格，是通用支援的重要档位。','三命提升治疗与减伤技能等级。','四命为范围内部队提供 25% 伤害加成。','五命解锁信标范围内复活，是优先争取的完整支援档位。']
 ];
+const SAMPLE_COUNT=Planner.SAMPLE_COUNT;
+let runId=0,seq=0,timer=0,worker=null;
+const pending=new Map();
+try{
+ worker=new Worker('worker.js?v=L5.5.2');
+ worker.onmessage=e=>{const p=pending.get(e.data.id);if(!p)return;pending.delete(e.data.id);e.data.error?p.fail():p.done(e.data.result);};
+ worker.onerror=()=>{worker=null;for(const [id,p] of pending){pending.delete(id);p.fail();}};
+}catch{worker=null;}
+function compute(input){
+ return new Promise(done=>{
+  const local=()=>done(Planner.compute(input));
+  if(!worker)return local();
+  const id=++seq;pending.set(id,{done,fail:local});worker.postMessage({id,input});
+ });
+}
+function schedule(){clearTimeout(timer);timer=setTimeout(calculate,200);}
+const pct=x=>(x===1?'100':(100*x).toFixed(1))+'%';
+function buildResult(r,owned,targets){
+ const label=targets.every(t=>t===null)?'自动推荐':targets.every(t=>t!==null)?'自选目标':'自选目标与自动推荐';
+ const detail=(mean,p90,avail,chance)=>'<dl><div><dt>平均需要多少抽</dt><dd>'+mean+'抽</dd></div><div><dt>多少抽有90%把握</dt><dd>'+p90+'抽</dd></div><div><dt>累计预算</dt><dd>'+avail+'抽</dd></div>'+(typeof chance==='number'?'<div><dt>该期达成率</dt><dd>'+pct(chance)+'</dd></div>':'')+'</dl>';
+ const cards=leaders.map((l,i)=>'<article class="draw-card"><div class="draw-card-header"><img class="draw-avatar" src="assets/'+l.img+'.webp" loading="lazy" decoding="async" alt="'+l.name+'"><div><h4 class="draw-card-name">'+l.name+'</h4><div class="draw-card-goal">'+badge(r.goal[i])+'<span>目标'+(r.goal[i]<0?'本期跳过':r.goal[i]+'命')+'</span></div></div></div><dl><div><dt>当前命座</dt><dd>'+(owned[i]<0?'未持有':owned[i]+'命')+'</dd></div></dl>'+detail(r.estimates[i].mean,r.estimates[i].p90,r.budget[i],r.leaders[i].chance)+'</article>').join('')
+  +'<article class="draw-card draw-total"><div class="draw-card-header"><h4 class="draw-card-name">三期合计</h4></div>'+detail(r.total.mean,r.total.p90,r.budget[2])+'</article>';
+ const merged=leaders.map((l,i)=>'<b class="advice-name">'+l.name+'</b>'+'<p class="advice-reason">'+(r.goal[i]===owned[i]?'本期无需追加抽取。':reasons[i][r.goal[i]])+'</p>'+'<p class="advice-next">'+(r.leaders[i].next?'<span>再升一档：</span> <b>'+rank(r.leaders[i].next.rank,i)+'</b>　<span>全部目标达成率：</span> <b>'+pct(r.leaders[i].next.chance)+'</b>':'<span>已是最高档位</span>')+'</p>').join('');
+ return '<small>'+label+'</small><div class="recommendations">'+r.goal.map((n,i)=>'<div class="recommendation">'+badge(n)+'<div><b>'+leaders[i].name+'</b><span>'+rank(n,i)+'</span></div></div>').join('')+'</div>'
+  +(r.chance<.9?'<p class="note">当前预算下，按期达成全部目标的把握低于90%。可以降低自选目标，或增加每月可攒抽数。</p>':'')
+  +'<div class="statrow"><div class="stat">每月能攒的抽数<b>'+r.monthly+' 抽</b></div><div class="stat">三期可用总抽数<b>'+r.budget[2]+' 抽</b></div><div class="stat">全部目标的模拟达成率<b>模拟达成率'+pct(r.chance)+'</b></div></div>'
+  +'<h3 class="draw-title">达到目标需要多少抽</h3><div class="result-cards">'+cards+'</div>'
+  +'<p class="note">累计预算包含此前各期。每位队长的抽数从上一目标完成后起算，跳过或已达标记为 0。按当前命座和保底状态估算，模拟达成率为估算结果，实际抽数会有波动。90%把握表示 10,000 次模拟中约有90%的情况能在这个抽数内达到目标。三期合计按整条招募过程统计。</p>'
+  +'<h3 class="draw-title">推荐方案说明</h3><div class="advice advice-merged">'+merged+'</div><p class="note">模型假设：三期共用同一条中尉保底进度，期间不重置；按每期一个月累计收入；秘钥碎片每200个折算1抽；首次获得为0命，每次重复获得提升1命。</p>';
+}
 function calculate(){
  saveSettings();
+ const mine=++runId;
  if(!form.checkValidity()){
    $('results').innerHTML='<p>请填写核心秘钥、秘钥碎片、距离保底次数和保底类型。每月抽数可留空，留空按 0 计算。</p>';
    $('state').textContent='填写完整后自动生成建议';
    return false;
  }
- const owned=[0,1,2].map(i=>val('own'+i)),monthly=monthlyIncome();
- const budget=Planner.limits(val('tickets'),val('pieces'),Array(3).fill({tickets:monthly,fragments:0}));
- const pity=80-val('remaining'),guaranteed=val('up')===1;
- const paths=Planner.samples(pity,guaranteed,0,0);
+ const owned=[0,1,2].map(i=>val('own'+i));
  const targets=owned.map((n,i)=>$('target'+i).value==='auto'?null:Math.max(n,val('target'+i)));
- const label=targets.every(target=>target===null)?'自动推荐':targets.every(target=>target!==null)?'自选目标':'自选目标与自动推荐';
- const rec=Planner.planTargets(owned,targets,budget,paths);
- const formatChance=x=>'模拟达成率'+(x===1?'100':(100*x).toFixed(1))+'%';
- const estimates=rec.copies.map((end,i)=>Planner.drawStats(paths,i?rec.copies[i-1]:0,end));
- const total=Planner.drawStats(paths,0,rec.copies[2]);
- const rows=leaders.map((l,i)=>'<tr><th>'+l.name+'</th><td>'+estimates[i].mean+'</td><td>'+estimates[i].p90+'</td><td>'+budget[i]+'</td></tr>').join('');
- const drawDetails=(mean,p90,available)=>'<dl><div><dt>平均需要多少抽</dt><dd>'+mean+'抽</dd></div><div><dt>多少抽有90%把握</dt><dd>'+p90+'抽</dd></div><div><dt>累计预算</dt><dd>'+available+'抽</dd></div></dl>';
- const mobileCards='<div class="result-cards">'+leaders.map((leader,i)=>
-   '<article class="draw-card"><div class="draw-card-header"><img class="draw-avatar" src="assets/'+leader.img+'.jpg" alt="'+leader.name+'"><div><h4 class="draw-card-name">'+leader.name+'</h4><div class="draw-card-goal">'+badge(rec.goal[i])+'<span>目标'+(rec.goal[i]<0?'本期跳过':rec.goal[i]+'命')+'</span></div></div></div><dl><div><dt>当前命座</dt><dd>'+ (owned[i]<0?'未持有':owned[i]+'命')+'</dd></div></dl>'+drawDetails(estimates[i].mean,estimates[i].p90,budget[i])+'</article>'
- ).join('')+'<article class="draw-card draw-total"><div class="draw-card-header"><h4 class="draw-card-name">三期合计</h4></div>'+drawDetails(total.mean,total.p90,budget[2])+'</article></div>';
- $('results').innerHTML='<small>'+label+'</small><div class="recommendations">'+rec.goal.map((n,i)=>'<div class="recommendation">'+badge(n)+'<div><b>'+leaders[i].name+'</b><span>'+rank(n,i)+'</span></div></div>').join('')+'</div>'+(rec.chance<.9?'<p class="note">按当前预算，在各期结束前达成全部目标的概率低于 90%。可以降低自选目标，或增加每月可攒抽数。</p>':'')+'<div class="statrow"><div class="stat">每月能攒的抽数<b>'+monthly+' 抽</b></div><div class="stat">三期可用总抽数<b>'+budget[2]+' 抽</b></div><div class="stat">全部目标的模拟达成率<b>'+formatChance(rec.chance)+'</b></div></div><h3 class="draw-title">达到目标需要多少抽</h3><table class="draw-table"><thead><tr><th>队长</th><th>平均需要多少抽</th><th>多少抽有90%把握</th><th>累计预算</th></tr></thead><tbody>'+rows+'<tr><th>三期合计</th><td>'+total.mean+'</td><td>'+total.p90+'</td><td>'+budget[2]+'</td></tr></tbody></table>'+mobileCards+'<p class="note">累计预算包含此前各期。每位队长的抽数从上一目标完成后起算，跳过或已达标记为 0。按当前命座和保底状态估算，模拟达成率为估算结果，实际抽数会有波动。90%把握表示 5,000 次模拟中约有90%的情况能在这个抽数内达到目标。三期合计按整条招募过程统计。</p><div class="advice">'+leaders.map((l,i)=>'<p><b>'+l.name+'</b>　'+(rec.goal[i]===owned[i]?'本期无需追加抽取。':reasons[i][rec.goal[i]])+'</p>').join('')+'</div>';
-
- $('state').textContent='已自动生成建议';
+ $('state').textContent='正在计算…';$('results').setAttribute('aria-busy','true');
+ compute({owned,targets,monthly:monthlyIncome(),tickets:val('tickets'),pieces:val('pieces'),remaining:val('remaining'),guaranteed:val('up')===1,count:SAMPLE_COUNT}).then(r=>{
+  if(mine!==runId)return;
+  $('results').innerHTML=buildResult(r,owned,targets);
+  $('results').removeAttribute('aria-busy');$('state').textContent='已自动生成建议';
+ });
 }
 function saveSettings(){
  try{
@@ -94,26 +115,26 @@ function fillIncome(values){
  updateIncome();
  calculate();
 }
-$('fillFree').onclick=()=>fillIncome([15,10,5,5,0,16,8,10]);
+let pendingFill=null;
+function askFill(values){
+ // Only ask when something would actually be overwritten.
+ if(sourceTotal()===0)return fillIncome(values);
+ pendingFill=values;
+ openDialog($('confirmFill'),document.activeElement);
+}
+$('confirmFillOk').onclick=()=>{$('confirmFill').close();if(pendingFill)fillIncome(pendingFill);pendingFill=null;};
+$('fillFree').onclick=()=>askFill([15,10,5,5,0,16,8,10]);
+$('fillPaid').onclick=()=>askFill([15,10,5,20,100,40,18,25]);
 $('clearIncome').onclick=()=>fillIncome(Array(8).fill(''));
-$('fillPaid').onclick=()=>fillIncome([15,10,5,20,100,40,18,25]);
-document.querySelectorAll('.income-reference > summary').forEach(summary => {
- summary.addEventListener('click', event => {
-  if (event.detail !== 0 && !event.target.closest('.shine-text')) event.preventDefault();
- });
-});
-document.querySelectorAll('.income-reference-end').forEach(button => {
- button.onclick = () => {
-  const reference = button.closest('details');
-  const summary = reference.querySelector('summary');
-  reference.open = false;
-  summary.focus({preventScroll:true});
-  summary.scrollIntoView({block:'nearest'});
- };
-});
-form.oninput=event=>{
- updateIncome();calculate();
+$('resetAll').onclick=()=>openDialog($('confirmReset'),$('resetAll'));
+$('confirmResetOk').onclick=()=>{
+ $('confirmReset').close();
+ try{localStorage.removeItem(storageKey);}catch{}
+ form.reset();
+ updateIncome();
+ calculate();
 };
+form.oninput=()=>{updateIncome();schedule();};
 form.onsubmit=e=>{e.preventDefault();if(form.reportValidity())calculate();$('results').scrollIntoView({behavior:'smooth'});};
 try{
  const saved=JSON.parse(localStorage.getItem(storageKey));
@@ -128,9 +149,66 @@ updateIncome();
 calculate();
 })();
 
+function openDialog(dialog,opener){
+ dialog._opener=opener||document.activeElement;
+ dialog.showModal();
+}
+document.querySelectorAll('dialog').forEach(dialog=>{
+ // Close when the grey area outside the dialog is clicked.
+ dialog.addEventListener('click',event=>{
+  if(event.target!==dialog)return;
+  const r=dialog.getBoundingClientRect();
+  if(event.clientX<r.left||event.clientX>r.right||event.clientY<r.top||event.clientY>r.bottom)dialog.close();
+ });
+ dialog.addEventListener('close',()=>{const o=dialog._opener;dialog._opener=null;if(o&&o.isConnected)o.focus({preventScroll:true});});
+});
 document.querySelectorAll('[data-open-dialog]').forEach(button=>{
- button.onclick=()=>document.getElementById(button.dataset.openDialog).showModal();
+ button.onclick=()=>openDialog(document.getElementById(button.dataset.openDialog),button);
 });
 document.querySelectorAll('[data-close-dialog]').forEach(button=>{
  button.onclick=()=>button.closest('dialog').close();
 });
+
+
+// ---- L5.5.2 budget pickers (the hidden native selects keep the value, validation and saving)
+(()=>{
+ const rem=document.getElementById('remaining'),up=document.getElementById('up');
+ const trig=document.getElementById('remainingBtn'),grid=document.getElementById('remainingGrid');
+ const cells=[...grid.querySelectorAll('button')],seg=[...document.querySelectorAll('.bf-seg button')];
+ function sync(){
+  trig.querySelector('.bf-value').textContent=rem.value;
+  for(const c of cells)c.setAttribute('aria-pressed',String(c.dataset.v===rem.value));
+  for(const s of seg)s.setAttribute('aria-pressed',String(s.dataset.v===up.value));
+ }
+ function set(sel,v){sel.value=v;sel.dispatchEvent(new Event('input',{bubbles:true}));sel.dispatchEvent(new Event('change',{bubbles:true}));sync();}
+ function open(){
+  grid.hidden=false;trig.setAttribute('aria-expanded','true');
+  (cells.find(c=>c.dataset.v===rem.value)||cells[0]).focus();
+ }
+ function close(focus){
+  if(grid.hidden)return;
+  grid.hidden=true;trig.setAttribute('aria-expanded','false');
+  if(focus)trig.focus();
+ }
+ trig.addEventListener('click',e=>{e.preventDefault();grid.hidden?open():close(true);});
+ grid.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;e.preventDefault();set(rem,b.dataset.v);close(true);});
+ grid.addEventListener('keydown',e=>{
+  const i=cells.indexOf(document.activeElement);if(i<0)return;
+  const rtl=document.documentElement.dir==='rtl';
+  const step={ArrowRight:rtl?-1:1,ArrowLeft:rtl?1:-1,ArrowDown:10,ArrowUp:-10}[e.key];
+  if(step){e.preventDefault();cells[Math.min(cells.length-1,Math.max(0,i+step))].focus();}
+  else if(e.key==='Escape'){e.preventDefault();close(true);}
+  else if(e.key==='Tab')close(false);
+ });
+ document.addEventListener('click',e=>{if(!e.target.closest('.bf-picker'))close(false);});
+ for(const s of seg)s.addEventListener('click',e=>{e.preventDefault();set(up,s.dataset.v);});
+ const form=document.getElementById('planner');
+// Only the boxes themselves respond: clicks on the label text or the empty part of a row do nothing
+ // (otherwise the browser forwards them to the first control in the row, including the hidden native select).
+ for(const row of document.querySelectorAll('#plan .budget-fields > .fields > label')){
+  row.addEventListener('click',e=>{if(!e.target.closest('input,button,.bf-picker,.bf-seg'))e.preventDefault();});
+ }
+ form.addEventListener('input',sync);
+ form.addEventListener('reset',()=>setTimeout(sync));
+ sync();
+})();
